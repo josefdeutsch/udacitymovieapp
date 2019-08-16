@@ -1,26 +1,20 @@
 package com.example.myapplication;
 
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import java.util.ArrayList;
 
 public class JsonUtils {
 
     private final static String RESULTS = "results";
-
     private final static String TITLE = "original_title";
     private final static String POSTER_PATH = "poster_path";
-
     private final static String VOTE_AVERAGE = "vote_average";
-
     private final static String RELEASE_DATE = "release_date";
     private final static String OVERVIEW = "overview";
-
     private final String http = "http://image.tmdb.org/t/p/w185";
 
     public MetaData parseJSON(String json) {
@@ -35,35 +29,24 @@ public class JsonUtils {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(json);
-
-
             JSONArray jsonArray = jsonObject.getJSONArray("results");
 
             for (int i = 0; i <= jsonArray.length()-1 ; i++) {
                 posterpatharraylist = supply(posterpatharraylist, sb, jsonArray, i);
-                System.out.println(posterpatharraylist.get(i).toString());
+                System.out.println(posterpatharraylist.get(i));
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-
                 title.add(jsonObject1.optString(TITLE));
-
                 average.add(jsonObject1.optString(VOTE_AVERAGE));
-
                 releaseDate.add(jsonObject1.optString(RELEASE_DATE));
-
                 overview.add(jsonObject1.optString(OVERVIEW));
-
-
-
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return new MetaData(posterpatharraylist,title,average,releaseDate,overview);
 
     }
-
     private ArrayList<String> supply(ArrayList<String> posterpatharraylist, StringBuilder sb, JSONArray jsonArray, int i) throws JSONException {
         sb.append(http);
         JSONObject jsonObject1 = jsonArray.getJSONObject(i);

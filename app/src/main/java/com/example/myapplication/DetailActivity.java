@@ -3,15 +3,13 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -26,7 +24,6 @@ public class DetailActivity extends AppCompatActivity {
         setupActionwithRed();
         init_Views();
         setup_Views(getTraveler());
-
     }
 
     private void setup_Views(Traveler traveler) {
