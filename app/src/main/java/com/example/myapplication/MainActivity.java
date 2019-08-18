@@ -1,25 +1,20 @@
 package com.example.myapplication;
 
 
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-
 import android.support.v7.widget.RecyclerView;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-
 import java.io.BufferedReader;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -33,16 +28,15 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
     private CardViewAdapter mCardViewAdapter, mCardViewAdapter2;
     private ArrayList<MetaData> popularlist;
     private ArrayList<MetaData> topratedlist;
-
-    private  final String POPULAR = "https://api.themoviedb.org/3/movie/popular?api_key==1";
-    private  final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?api_key=e=1";
+    private final String POPULAR = "https://api.themoviedb.org/3/movie/popular?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
+    private final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
     private  final int FIRST_ITEM = 0;
 
     // set permission to Popular if true,
     // set permission to TopRated if false
     private Boolean listViewDecider = true;
 
-    private JsonUtils jsonUtils = new JsonUtils();;
+    private JsonUtils jsonUtils = new JsonUtils();
     private ActionBar actionBar;
 
 
@@ -62,13 +56,15 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+
         mCardViewAdapter = new CardViewAdapter(this,popularlist.get(FIRST_ITEM));
         mCardViewAdapter2 = new CardViewAdapter(this,topratedlist.get(FIRST_ITEM));
+
         mRecyclerView.setAdapter(mCardViewAdapter);
     }
 
     private void init_Views() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        mRecyclerView = findViewById(R.id.recyclerview);
     }
 
     private void setupActionBarWithRed() {
@@ -125,14 +121,14 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
             String vote_average = popularlist.get(FIRST_ITEM).getVOTE_AVERAGE().get(Integer.parseInt(str)).toString();
             String release_date = popularlist.get(FIRST_ITEM).getRELEASE_DATE().get(Integer.parseInt(str)).toString();
             String overview = popularlist.get(FIRST_ITEM).getOVERVIEW().get(Integer.parseInt(str)).toString();
-            String poster = popularlist.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str)).toString();
+            String poster = popularlist.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str));
             return new Traveler(title,vote_average,release_date,overview,poster);
         }else{
             String title = topratedlist.get(FIRST_ITEM).getTITLE().get(Integer.parseInt(str)).toString();
             String vote_average = topratedlist.get(FIRST_ITEM).getVOTE_AVERAGE().get(Integer.parseInt(str)).toString();
             String release_date = topratedlist.get(FIRST_ITEM).getRELEASE_DATE().get(Integer.parseInt(str)).toString();
             String overview = topratedlist.get(FIRST_ITEM).getOVERVIEW().get(Integer.parseInt(str)).toString();
-            String poster = topratedlist.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str)).toString();
+            String poster = topratedlist.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str));
             return new Traveler(title,vote_average,release_date,overview,poster);
         }
     }

@@ -1,9 +1,9 @@
 package com.example.myapplication;
 
 import android.content.Context;
-
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +27,16 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
     public CardViewAdapter(CardViewAdapterOnClickHandler clickHandler, MetaData metaData) {
 
         mClickHandler = clickHandler;
-        this.arrayList=metaData.getPosterPath();
+        init_Arraylist(metaData);
 
+    }
+
+    private void init_Arraylist(MetaData metaData) {
+        if (metaData != null) {
+            this.arrayList = metaData.getPosterPath();
+        } else {
+            Log.d(LOG_TAG, "a problem occurs;- network connection...");
+        }
     }
 
     class CardViewAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -37,7 +45,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
         public CardViewAdapterViewHolder(View view) {
             super(view);
-            imageButton = (ImageView) view.findViewById(R.id.imageButton1);
+            imageButton = view.findViewById(R.id.imageButton1);
             view.setOnClickListener(this);
         }
         @Override
