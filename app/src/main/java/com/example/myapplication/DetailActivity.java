@@ -1,11 +1,17 @@
 package com.example.myapplication;
 
+import android.Manifest;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,8 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.myapplication.data.Flavors;
-import com.example.myapplication.data.FlavorsContract;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
@@ -26,36 +30,13 @@ public class DetailActivity extends AppCompatActivity {
     private Button markAsFavorite;
     private String MOVIEID,TITLE;
 
-    Flavors[] flavors = {
-            new Flavors("Cupcake", "The first release of Android", R.drawable.cupcake),
-            new Flavors("Donut", "The world's information is at your fingertips – " +
-                    "search the web, get driving directions... or just watch cat videos.",
-                    R.drawable.donut),
-            new Flavors("Eclair", "Make your home screen just how you want it. Arrange apps " +
-                    "and widgets across multiple screens and in folders. Stunning live wallpapers " +
-                    "respond to your touch.", R.drawable.eclair),
-            new Flavors("Froyo", "Voice Typing lets you input text, and Voice Actions let " +
-                    "you control your phone, just by speaking.", R.drawable.froyo),
-            new Flavors("GingerBread", "New sensors make Android great for gaming - so " +
-                    "you can touch, tap, tilt, and play away.", R.drawable.gingerbread),
-            new Flavors("Honeycomb", "Optimized for tablets, this release opens up new " +
-                    "horizons wherever you are.", R.drawable.honeycomb),
-            new Flavors("Ice Cream Sandwich", "Android comes of age with a new, refined design. " +
-                    "Simple, beautiful and beyond smart.", R.drawable.icecream),
-            new Flavors("Jelly Bean", "Android is fast and smooth with buttery graphics. " +
-                    "With Google Now, you get just the right information at the right time.",
-                    R.drawable.jellybean),
-            new Flavors("KitKat", "Smart, simple, and truly yours. A more polished design, " +
-                    "improved performance, and new features.", R.drawable.kitkat),
-            new Flavors("Lollipop", "A sweet new take on Android. Get the smarts of Android on" +
-                    " screens big and small – with the right information at the right moment.",
-                    R.drawable.lollipop)
-    };
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        permission();
         setupActionwithRed();
         init_Views();
         setup_Views(getTraveler());
@@ -101,37 +82,71 @@ public class DetailActivity extends AppCompatActivity {
     /** Called when the user touches the button */
     public void mark(View view) {
 
-        String[] projection = new String[]{FlavorsContract.FlavorEntry.COLUMN_VERSION_NAME,FlavorsContract.FlavorEntry.COLUMN_DESCRIPTION};
+        ContentResolver resolver = getContentResolver();
+        String[] projection = new String[]{MediaStore.Video.Media.DATA};
+        ContentValues[] contentarray = new ContentValues[10];
 
-        ContentValues[] flavorValuesArr = new ContentValues[flavors.length];
-        // Loop through static array of Flavors, add each to an instance of ContentValues
-        // in the array of ContentValues
-        for(int i = 0; i < flavors.length; i++){
-            flavorValuesArr[i] = new ContentValues();
-            flavorValuesArr[i].put(FlavorsContract.FlavorEntry.COLUMN_ICON, flavors[i].image);
-            flavorValuesArr[i].put(FlavorsContract.FlavorEntry.COLUMN_VERSION_NAME,
-                    flavors[i].name);
-            flavorValuesArr[i].put(FlavorsContract.FlavorEntry.COLUMN_DESCRIPTION,
-                    flavors[i].description);
+        for (int i = 0; i <= contentarray.length-1 ; i++) {
+            contentarray[i] = new ContentValues();
+            contentarray[i].put(MediaStore.Video.Media.DATA,"/http://"+new Integer(i));
         }
 
-        // bulkInsert our ContentValues
-        getContentResolver().bulkInsert(FlavorsContract.FlavorEntry.CONTENT_URI,
-                flavorValuesArr);
 
-        Cursor cursor = getContentResolver().
-                query(FlavorsContract.FlavorEntry.CONTENT_URI,projection,null,null,null);
+        resolver.bulkInsert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentarray);// Call the query method on the resolver with the correct Uri from the contract class
+
+        Cursor cursor = resolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                projection, null, null, null);
 
         while (cursor.moveToNext()) {
-
-            int a = cursor.getColumnIndex(FlavorsContract.FlavorEntry.COLUMN_VERSION_NAME);
-            int b = cursor.getColumnIndex(FlavorsContract.FlavorEntry.COLUMN_DESCRIPTION);
-
-            Log.d(TAG, "ID: " + cursor.getString(a));
-            Log.d(TAG, "TITLE: " + cursor.getString(b));
-
-
+            int c = cursor.getColumnIndex(MediaStore.Video.Media.DATA);
+            Log.d(TAG, "DATA: " + cursor.getString(c));
         }
 
+        Log.d(TAG, MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString());
+        Log.d(TAG, MediaStore.Video.Media.DATA.toString());
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                }
+                return;
+            }
+
+        }
+    }
+
+    private void permission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Permission im Manifest nicht granted.");
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Log.d(TAG, "shouldSHowRequestPermissionRationale...");
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                Log.d(TAG, "requestPermission");
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
     }
 }
+
+
