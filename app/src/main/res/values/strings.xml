@@ -3,5 +3,6 @@
     <string name="error_message">error</string>
     <string name="action_refresh">popular</string>
     <string name="action_refresh2">toprated</string>
+    <string name="content_authority">com.example.myapplication.data.app</string>
 
 </resources>

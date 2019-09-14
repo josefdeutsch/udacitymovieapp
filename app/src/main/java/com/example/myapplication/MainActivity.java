@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements CardViewAdapter.CardViewAdapterOnClickHandler {
-
+    private static final String TAG = "MainActivity";
     private RecyclerView mRecyclerView;
     private CardViewAdapter mCardViewAdapter, mCardViewAdapter2;
     private ArrayList<MetaData> popularlist;
@@ -49,14 +49,18 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
         OnSaveInstanceState(savedInstanceState);
         init_Views();
         setup_Views();
+        queryDataBase();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
 
+    }
     private void setup_Views() {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-
         mCardViewAdapter = new CardViewAdapter(this,popularlist.get(FIRST_ITEM));
         mCardViewAdapter2 = new CardViewAdapter(this,topratedlist.get(FIRST_ITEM));
 
@@ -122,14 +126,16 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
             String release_date = popularlist.get(FIRST_ITEM).getRELEASE_DATE().get(Integer.parseInt(str)).toString();
             String overview = popularlist.get(FIRST_ITEM).getOVERVIEW().get(Integer.parseInt(str)).toString();
             String poster = popularlist.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str));
-            return new Traveler(title,vote_average,release_date,overview,poster);
+            String id = popularlist.get(FIRST_ITEM).get_id().get(Integer.parseInt(str));
+            return new Traveler(title,vote_average,release_date,overview,poster,id);
         }else{
             String title = topratedlist.get(FIRST_ITEM).getTITLE().get(Integer.parseInt(str)).toString();
             String vote_average = topratedlist.get(FIRST_ITEM).getVOTE_AVERAGE().get(Integer.parseInt(str)).toString();
             String release_date = topratedlist.get(FIRST_ITEM).getRELEASE_DATE().get(Integer.parseInt(str)).toString();
             String overview = topratedlist.get(FIRST_ITEM).getOVERVIEW().get(Integer.parseInt(str)).toString();
             String poster = topratedlist.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str));
-            return new Traveler(title,vote_average,release_date,overview,poster);
+            String id = popularlist.get(FIRST_ITEM).get_id().get(Integer.parseInt(str));
+            return new Traveler(title,vote_average,release_date,overview,poster,id);
         }
     }
 
@@ -195,6 +201,11 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
             super.onPostExecute(status);
 
         }
+    }
+    private void queryDataBase(){
+
+
+
     }
 
 }

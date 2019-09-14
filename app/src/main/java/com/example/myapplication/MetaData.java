@@ -13,13 +13,24 @@ public class MetaData implements Parcelable  {
     private ArrayList OVERVIEW;
     private ArrayList<String> posterpatharraylist;
 
-    public MetaData(ArrayList<String> posterpatharraylist,ArrayList<String> TITLE, ArrayList<String> VOTE_AVERAGE, ArrayList<String> RELEASE_DATE, ArrayList<String> OVERVIEW) {
+    public ArrayList<String> get_id() {
+        return _id;
+    }
+
+    public void set_id(ArrayList<String> _id) {
+        this._id = _id;
+    }
+
+    private ArrayList<String> _id;
+
+    public MetaData(ArrayList<String> posterpatharraylist,ArrayList<String> TITLE, ArrayList<String> VOTE_AVERAGE, ArrayList<String> RELEASE_DATE, ArrayList<String> OVERVIEW, ArrayList<String> _id) {
 
         this.posterpatharraylist=posterpatharraylist;
         this.TITLE=TITLE;
         this.VOTE_AVERAGE=VOTE_AVERAGE;
         this.RELEASE_DATE=RELEASE_DATE;
         this.OVERVIEW=OVERVIEW;
+        this._id = _id;
     }
 
     protected MetaData(Parcel in) {

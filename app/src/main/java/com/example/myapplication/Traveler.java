@@ -13,12 +13,23 @@ public class Traveler implements Parcelable {
     private String OVERVIEW;
     private String posterpath;
 
-    public Traveler(String TITLE, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String posterpath) {
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    private String _id;
+
+    public Traveler(String TITLE, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String posterpath,String ID) {
         this.TITLE = TITLE;
         this.VOTE_AVERAGE = VOTE_AVERAGE;
         this.RELEASE_DATE = RELEASE_DATE;
         this.OVERVIEW = OVERVIEW;
         this.posterpath = posterpath;
+        this._id = ID;
     }
 
     public String getTITLE() {
@@ -67,6 +78,7 @@ public class Traveler implements Parcelable {
         RELEASE_DATE = in.readString();
         OVERVIEW = in.readString();
         posterpath = in.readString();
+        _id = in.readString();
     }
 
     public static final Creator<Traveler> CREATOR = new Creator<Traveler>() {
@@ -93,5 +105,6 @@ public class Traveler implements Parcelable {
         dest.writeString(RELEASE_DATE);
         dest.writeString(OVERVIEW);
         dest.writeString(posterpath);
+        dest.writeString(_id);
     }
 }
