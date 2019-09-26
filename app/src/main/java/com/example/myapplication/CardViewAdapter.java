@@ -2,33 +2,35 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.data.Note;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewAdapterViewHolder>{
-
-
+    private static final String TAG = "CardViewAdapter";
     private static final String LOG_TAG = CardViewAdapter.class.getSimpleName();
     private final CardViewAdapterOnClickHandler mClickHandler;
     private ArrayList arrayList;
+    private List<Note> notes = new ArrayList<>();
 
     public interface CardViewAdapterOnClickHandler {
         void onClick(String weatherForDay);
     }
 
     public CardViewAdapter(CardViewAdapterOnClickHandler clickHandler, MetaData metaData) {
-
         mClickHandler = clickHandler;
         init_Arraylist(metaData);
-
     }
 
     private void init_Arraylist(MetaData metaData) {
@@ -40,9 +42,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
     }
 
     class CardViewAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         public final ImageView imageButton;
-
         public CardViewAdapterViewHolder(View view) {
             super(view);
             imageButton = view.findViewById(R.id.imageButton1);
@@ -67,19 +67,21 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     @Override
     public void onBindViewHolder(@NonNull CardViewAdapterViewHolder cardViewAdapterViewHolder, int i) {
-       Picasso.get()
-        .load(arrayList.get(i).toString())
-        .into(cardViewAdapterViewHolder.imageButton);
-            System.out.println(i);
+
+          // Note currentNote = notes.get(i);
+          Picasso.get().load(arrayList.get(i).toString()).into(cardViewAdapterViewHolder.imageButton);
+          System.out.println(i);
     }
 
     @Override
     public int getItemCount() {
-
         // maximum results to be found at one page; json raw at moviedb.org.
-        return 20;
+        return arrayList.size();
 
     }
-
-
+    public void setNotes(List<Note> notes) {
+        Log.d(TAG, "setNotes: ");
+        this.notes = notes;
+        notifyDataSetChanged();
+    }
 }

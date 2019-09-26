@@ -17,4 +17,9 @@
         android:orderInCategory="1"
         android:title="@string/action_refresh2"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_refresh3"
+        android:orderInCategory="1"
+        android:title="favs"
+        app:showAsAction="ifRoom"/>
 </menu>

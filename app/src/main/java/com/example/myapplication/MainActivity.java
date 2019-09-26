@@ -1,18 +1,32 @@
 package com.example.myapplication;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.data.Note;
+import com.example.myapplication.data.NoteAdapter;
+import com.example.myapplication.data.NoteViewModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,22 +34,24 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity implements CardViewAdapter.CardViewAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteViewAdapaterOnClickHandler {
     private static final String TAG = "MainActivity";
     private RecyclerView mRecyclerView;
-    private CardViewAdapter mCardViewAdapter, mCardViewAdapter2;
+    private NoteAdapter mCardViewAdapter, mCardViewAdapter2, mCardViewAdapter3;
+     // final ??
     private ArrayList<MetaData> popularlist;
     private ArrayList<MetaData> topratedlist;
     private final String POPULAR = "https://api.themoviedb.org/3/movie/popular?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
     private final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
     private  final int FIRST_ITEM = 0;
-
+    private NoteViewModel noteViewModel;
     // set permission to Popular if true,
     // set permission to TopRated if false
     private Boolean listViewDecider = true;
-
+    private static final String anotherString= "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
     private JsonUtils jsonUtils = new JsonUtils();
     private ActionBar actionBar;
 
@@ -58,13 +74,35 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
 
     }
     private void setup_Views() {
+
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mCardViewAdapter = new CardViewAdapter(this,popularlist.get(FIRST_ITEM));
-        mCardViewAdapter2 = new CardViewAdapter(this,topratedlist.get(FIRST_ITEM));
 
+        mCardViewAdapter3 = new NoteAdapter();
+        mCardViewAdapter = new NoteAdapter(this,popularlist.get(FIRST_ITEM)); // weil ClickHandler anders...
+        mCardViewAdapter2 = new NoteAdapter(this,topratedlist.get(FIRST_ITEM));
+
+        noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
+        noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
+
+            @Override
+            public void onChanged(@Nullable List<Note> notes) {
+                mCardViewAdapter3.setNotes(notes);
+            }
+        });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                msgReceiver, new IntentFilter("MetaData"));
+        Note note = new Note("atitle", anotherString, 2);
+     //   noteViewModel.deleteAllNotes();
+        noteViewModel.insert(note);
+        noteViewModel.insert(note);
+        noteViewModel.insert(note);
+        noteViewModel.insert(note);
+       // mRecyclerView.setAdapter(adapter);
         mRecyclerView.setAdapter(mCardViewAdapter);
+
     }
 
     private void init_Views() {
@@ -77,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
     }
 
     private void OnSaveInstanceState(Bundle savedInstanceState) {
+
         if(savedInstanceState==null||!savedInstanceState.containsKey("popular")||!savedInstanceState.containsKey("toprated")){
             this.popularlist.add(getMetaData(POPULAR));
             this.topratedlist.add(getMetaData(TOPRATED));
@@ -128,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
             String poster = popularlist.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str));
             String id = popularlist.get(FIRST_ITEM).get_id().get(Integer.parseInt(str));
             return new Traveler(title,vote_average,release_date,overview,poster,id);
-        }else{
+        }else if(!listViewDecider){
             String title = topratedlist.get(FIRST_ITEM).getTITLE().get(Integer.parseInt(str)).toString();
             String vote_average = topratedlist.get(FIRST_ITEM).getVOTE_AVERAGE().get(Integer.parseInt(str)).toString();
             String release_date = topratedlist.get(FIRST_ITEM).getRELEASE_DATE().get(Integer.parseInt(str)).toString();
@@ -136,7 +175,10 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
             String poster = topratedlist.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str));
             String id = popularlist.get(FIRST_ITEM).get_id().get(Integer.parseInt(str));
             return new Traveler(title,vote_average,release_date,overview,poster,id);
+        }else if(listViewDecider=null){
+
         }
+        return null;
     }
 
     @Override
@@ -151,13 +193,18 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            listViewDecider = true;
+            //listViewDecider = true;
             mRecyclerView.swapAdapter(mCardViewAdapter,true);
             return true;
         }
         if (id == R.id.action_refresh2) {
-            listViewDecider = false;
+          //  listViewDecider = false;
             mRecyclerView.swapAdapter(mCardViewAdapter2,true);
+            return true;
+        }
+        if (id == R.id.action_refresh3) {
+        //  listViewDecider = null;
+            mRecyclerView.swapAdapter(mCardViewAdapter3,true);
             return true;
         }
 
@@ -202,10 +249,27 @@ public class MainActivity extends AppCompatActivity implements CardViewAdapter.C
 
         }
     }
-    private void queryDataBase(){
 
+    private void queryDataBase(){}
 
-
+    private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String string  = intent.getStringExtra("MetaData");
+            Note note = new Note("atitle", string, 10);
+            //noteViewModel.insert(note);
+           // noteViewModel.deleteAllNotes();
+            Log.d(TAG, "MetaData"+" "+string);
+        }
+    };
+    public View.OnClickListener navigateTo(final Class<?> clazz) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, clazz);
+                startActivity(intent);
+            }
+        };
     }
 
 }

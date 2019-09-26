@@ -10,25 +10,29 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
+    private static final String astring= "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
     private static final String TAG = "DetailActivity";
     private TextView title,releaseDate,average,overview;
     private ImageView imageView;
     private ActionBar actionBar;
     private Button markAsFavorite;
     private String MOVIEID,TITLE;
+    private Button button;
 
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
 
@@ -36,6 +40,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        button = findViewById(R.id.deliver);
         permission();
         setupActionwithRed();
         init_Views();
@@ -65,9 +70,14 @@ public class DetailActivity extends AppCompatActivity {
         average = findViewById(R.id.average);
         imageView = findViewById(R.id.image);
         overview = findViewById(R.id.overview);
-        markAsFavorite = findViewById(R.id.mark);
+     //   markAsFavorite = findViewById(R.id.mark);
 
     }
+
+    public void deliver(View view){
+        sendMessageToActivity(astring);
+    }
+
 
     private void setupActionwithRed() {
         actionBar=getSupportActionBar();
@@ -146,6 +156,13 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             // Permission has already been granted
         }
+    }
+
+    private void sendMessageToActivity(String obj) {
+        Intent intent = new Intent("MetaData");
+        // You can also include some extra data.
+        intent.putExtra("MetaData", obj);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
 

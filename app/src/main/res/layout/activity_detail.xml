@@ -74,9 +74,9 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="mark"
-                android:onClick="mark"
-                android:id="@+id/mark"
+                android:text="deliver"
+                android:onClick="deliver"
+                android:id="@+id/deliver"
                 android:layout_below="@id/overview"
                 />
 
