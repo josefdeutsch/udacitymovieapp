@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -15,29 +14,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.DialogTitle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.myapplication.data.Note;
-import com.example.myapplication.data.NoteAdapter;
-import com.example.myapplication.data.NoteViewModel;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements CardViewAdapter.CardViewAdapterOnClickHandler{
     private static final String astring= "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
@@ -50,6 +36,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
     private Button markAsFavorite;
     private String MOVIEID,TITLE,PATH;
     private Button button;
+    private ArrayList<String> KEYS;
 
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
 
@@ -63,7 +50,8 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         init_Views();
         setup_Views(getTraveler());
         setup_Recyler();
-
+        String string = Integer.toString(KEYS.size());
+        Log.d(TAG, "onCreate: "+string);
     }
 
     private void setup_Recyler(){
@@ -71,7 +59,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        CardViewAdapter mCardViewAdapter = new CardViewAdapter(this,new ArrayList(10));
+        CardViewAdapter mCardViewAdapter = new CardViewAdapter(this,new ArrayList(KEYS));
         mRecyclerView.setAdapter(mCardViewAdapter);
     }
 
@@ -88,7 +76,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         MOVIEID = getTraveler().get_id();
         TITLE = getTraveler().getTITLE();
         PATH = getTraveler().getPosterpath();
-
+        KEYS = getTraveler().getStringArrayList();
     }
 
     private void init_Views() {

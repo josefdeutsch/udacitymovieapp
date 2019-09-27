@@ -21,6 +21,7 @@ public class JsonUtils {
     private final static String RELEASE_DATE = "release_date";
     private final static String OVERVIEW = "overview";
     private final static String ID = "id";
+    private final static String KEY = "key";
     private final String http = "http://image.tmdb.org/t/p/w185";
 
     public MetaData parseJSON(String json) {
@@ -70,7 +71,7 @@ public class JsonUtils {
         sb.append(str);
         return sb.toString();
     }
-    public MetaDataSingle parseJSONSINGLE(String json) {
+    public MetaDataPlaceHolder parseJSONSINGLE(String json) {
 
         String RESULTS = null;
         String TITLE = null;
@@ -98,9 +99,30 @@ public class JsonUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         // String TITLE, String POSTER_PATH, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String ID
-        return new MetaDataSingle(TITLE,POSTER_PATH,VOTE_AVERAGE,RELEASE_DATE,OVERVIEW,ID);
+        return new MetaDataPlaceHolder(TITLE,POSTER_PATH,VOTE_AVERAGE,RELEASE_DATE,OVERVIEW,ID);
+    }
+    public MetaDataKeyHolder parseJSONKEY(String json) {
+
+        String string = null;
+        ArrayList<String> key = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+        Log.d(TAG, "parseJSONKEY: "+json);
+       JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(json);
+            JSONArray jsonArray = jsonObject.getJSONArray("results");
+            for (int i = 0; i <= jsonArray.length()-1 ; i++) {
+                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                string = jsonObject1.optString("key");
+                key.add(string);
+               // Log.d(TAG, "parseJSONKEY IN ARRAYLOOP: "+string);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new MetaDataKeyHolder(key);
+     //   return new MetaDataKeyHolder(key);
     }
 }

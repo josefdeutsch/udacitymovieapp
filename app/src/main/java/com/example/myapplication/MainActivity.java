@@ -14,12 +14,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.GridLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
      // final ??
     private ArrayList<MetaData> popularlist;
     private ArrayList<MetaData> topratedlist;
-    private ArrayList<MetaDataSingle> favoritelist;
+    private ArrayList<MetaDataPlaceHolder> favoritelist;
 
     private final String POPULAR = "https://api.themoviedb.org/3/movie/popular?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
     private final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
@@ -202,17 +200,43 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         String overview = arrayList.get(FIRST_ITEM).getOVERVIEW().get(Integer.parseInt(str)).toString();
         String poster = arrayList.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str));
         String id = arrayList.get(FIRST_ITEM).get_id().get(Integer.parseInt(str));
-        return new Traveler(title,vote_average,release_date,overview,poster,id);
+        MetaDataKeyHolder metaDataKeyHolder = getKeys(id);
+        ArrayList<String> keys = metaDataKeyHolder.getKeys();
+        String string = Integer.toString(keys.size());
+        Log.d(TAG, "loadedtraveler: "+string);
+        // Traveler muss mit id query holt ein Objekt das weitergegeben wird.
+
+        return new Traveler(title,vote_average,release_date,overview,poster,id,keys);
     }
-    public Traveler loadedtravelers(ArrayList<MetaDataSingle> arrayList, String str){
+    public Traveler loadedtravelers(ArrayList<MetaDataPlaceHolder> arrayList, String str){
         String title = arrayList.get(Integer.parseInt(str)).getTITLE();
         String vote_average = arrayList.get(Integer.parseInt(str)).getVOTE_AVERAGE();
         String release_date = arrayList.get(Integer.parseInt(str)).getRELEASE_DATE();
         String overview = arrayList.get(Integer.parseInt(str)).getOVERVIEW();
         String poster = arrayList.get(Integer.parseInt(str)).getPOSTER_PATH();
-        String id = arrayList.get(Integer.parseInt(str)).getPOSTER_PATH();
-        return new Traveler(title,vote_average,release_date,overview,poster,id);
+        String id = arrayList.get(Integer.parseInt(str)).getID();
+        MetaDataKeyHolder metaDataKeyHolder = getKeys(id);
+        ArrayList<String> keys = metaDataKeyHolder.getKeys();
+        String string = Integer.toString(keys.size());
+        Log.d(TAG, "loadedtravelers: "+string);
+        return new Traveler(title,vote_average,release_date,overview,poster,id,keys);
 
+    }
+    private MetaDataKeyHolder getKeys(String id){
+       String segment="https://api.themoviedb.org/3/movie/";
+       String segment2 ="/videos?api_key=e70a89ec254767811eb928163ee008e4&language=en-US";
+       String url = segment+id+segment2;
+       Log.d(TAG, "getKeys: "+url);
+       DownloadKeys downloadKeys = new DownloadKeys(url);
+       MetaDataKeyHolder metaDataKeyHolder = null;
+        try {
+           metaDataKeyHolder = downloadKeys.execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return metaDataKeyHolder;
     }
 
     @Override
@@ -283,9 +307,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         }
     }
 
-
-    private void queryDataBase(){}
-
     private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -304,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
             String segment2 ="?api_key=e70a89ec254767811eb928163ee008e4&language=en-US";
             String url = segment.concat(movieid).concat(segment2);
             DownloadDetails downloadDetails = new DownloadDetails(url);
-            MetaDataSingle metaDataSingle = null;
+            MetaDataPlaceHolder metaDataSingle = null;
             try {
                  metaDataSingle = downloadDetails.execute().get();
             } catch (ExecutionException e) {
@@ -312,7 +333,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
             favoritelist.add(metaDataSingle);
             //favoritelist.add(movieid);
             Log.d(TAG, "onReceive: "+movieid);
@@ -328,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         };
     }
 
-     class DownloadDetails extends AsyncTask<Void, Void, MetaDataSingle> {
+     class DownloadDetails extends AsyncTask<Void, Void, MetaDataPlaceHolder> {
         String str;
         public DownloadDetails(String str){
             this.str=str;
@@ -340,8 +360,8 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         }
 
         @Override
-        protected MetaDataSingle doInBackground(Void... voids) {
-            MetaDataSingle metaData = null;
+        protected MetaDataPlaceHolder doInBackground(Void... voids) {
+            MetaDataPlaceHolder metaData = null;
             try{
                 URL oracle = new URL(str);
                 URLConnection yc = oracle.openConnection();
@@ -359,7 +379,44 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         }
 
         @Override
-        protected void onPostExecute(MetaDataSingle status){
+        protected void onPostExecute(MetaDataPlaceHolder status){
+
+            super.onPostExecute(status);
+
+        }
+    }
+
+     class DownloadKeys extends AsyncTask<Void, Void, MetaDataKeyHolder> {
+        String str;
+        public DownloadKeys(String str){
+            this.str=str;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected MetaDataKeyHolder doInBackground(Void... voids) {
+            MetaDataKeyHolder metaData = null;
+            try{
+                URL oracle = new URL(str);
+                URLConnection yc = oracle.openConnection();
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        yc.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                    metaData = jsonUtils.parseJSONKEY(inputLine);
+                in.close();
+            }catch (IOException e){
+
+            }
+            return metaData;
+        }
+
+        @Override
+        protected void onPostExecute(MetaDataKeyHolder status){
 
             super.onPostExecute(status);
 

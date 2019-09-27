@@ -3,7 +3,7 @@ package com.example.myapplication;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MetaDataSingle implements Parcelable {
+public class MetaDataPlaceHolder implements Parcelable {
 
 
     private  String RESULTS;
@@ -13,6 +13,15 @@ public class MetaDataSingle implements Parcelable {
     private  String RELEASE_DATE;
     private  String OVERVIEW;
     private  String ID;
+    private  String KEY;
+
+    public String getKEY() {
+        return KEY;
+    }
+
+    public void setKEY(String KEY) {
+        this.KEY = KEY;
+    }
 
     public String getRESULTS() {
         return RESULTS;
@@ -70,10 +79,9 @@ public class MetaDataSingle implements Parcelable {
         this.ID = ID;
     }
 
-    public MetaDataSingle(){}
+    public MetaDataPlaceHolder(){}
 
-    public MetaDataSingle(String TITLE, String POSTER_PATH, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String ID) {
-
+    public MetaDataPlaceHolder(String TITLE, String POSTER_PATH, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String ID) {
         this.TITLE = TITLE;
         this.POSTER_PATH = POSTER_PATH;
         this.VOTE_AVERAGE = VOTE_AVERAGE;
@@ -81,8 +89,17 @@ public class MetaDataSingle implements Parcelable {
         this.OVERVIEW = OVERVIEW;
         this.ID = ID;
     }
+    public MetaDataPlaceHolder(String TITLE, String POSTER_PATH, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String ID,String KEY) {
+        this.TITLE = TITLE;
+        this.POSTER_PATH = POSTER_PATH;
+        this.VOTE_AVERAGE = VOTE_AVERAGE;
+        this.RELEASE_DATE = RELEASE_DATE;
+        this.OVERVIEW = OVERVIEW;
+        this.ID = ID;
+        this.KEY = KEY;
+    }
 
-    protected MetaDataSingle(Parcel in) {
+    protected MetaDataPlaceHolder(Parcel in) {
 
         TITLE = in.readString();
         POSTER_PATH = in.readString();
@@ -90,17 +107,18 @@ public class MetaDataSingle implements Parcelable {
         RELEASE_DATE = in.readString();
         OVERVIEW = in.readString();
         ID = in.readString();
+        KEY = in.readString();
     }
 
-    public static final Creator<MetaDataSingle> CREATOR = new Creator<MetaDataSingle>() {
+    public static final Creator<MetaDataPlaceHolder> CREATOR = new Creator<MetaDataPlaceHolder>() {
         @Override
-        public MetaDataSingle createFromParcel(Parcel in) {
-            return new MetaDataSingle(in);
+        public MetaDataPlaceHolder createFromParcel(Parcel in) {
+            return new MetaDataPlaceHolder(in);
         }
 
         @Override
-        public MetaDataSingle[] newArray(int size) {
-            return new MetaDataSingle[size];
+        public MetaDataPlaceHolder[] newArray(int size) {
+            return new MetaDataPlaceHolder[size];
         }
     };
 
@@ -118,5 +136,6 @@ public class MetaDataSingle implements Parcelable {
         dest.writeString(RELEASE_DATE);
         dest.writeString(OVERVIEW);
         dest.writeString(ID);
+        dest.writeString(KEY);
     }
 }

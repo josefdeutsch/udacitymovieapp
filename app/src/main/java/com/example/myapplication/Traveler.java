@@ -12,6 +12,29 @@ public class Traveler implements Parcelable {
     private String RELEASE_DATE;
     private String OVERVIEW;
     private String posterpath;
+    private ArrayList<String> stringArrayList;
+
+    protected Traveler(Parcel in) {
+        TITLE = in.readString();
+        VOTE_AVERAGE = in.readString();
+        RELEASE_DATE = in.readString();
+        OVERVIEW = in.readString();
+        posterpath = in.readString();
+        stringArrayList = in.createStringArrayList();
+        _id = in.readString();
+    }
+
+    public static final Creator<Traveler> CREATOR = new Creator<Traveler>() {
+        @Override
+        public Traveler createFromParcel(Parcel in) {
+            return new Traveler(in);
+        }
+
+        @Override
+        public Traveler[] newArray(int size) {
+            return new Traveler[size];
+        }
+    };
 
     public String get_id() {
         return _id;
@@ -23,13 +46,14 @@ public class Traveler implements Parcelable {
 
     private String _id;
 
-    public Traveler(String TITLE, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String posterpath,String ID) {
+    public Traveler(String TITLE, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String posterpath,String ID,ArrayList<String> stringArrayList) {
         this.TITLE = TITLE;
         this.VOTE_AVERAGE = VOTE_AVERAGE;
         this.RELEASE_DATE = RELEASE_DATE;
         this.OVERVIEW = OVERVIEW;
         this.posterpath = posterpath;
         this._id = ID;
+        this.stringArrayList=stringArrayList;
     }
 
     public String getTITLE() {
@@ -72,26 +96,13 @@ public class Traveler implements Parcelable {
         this.posterpath = posterpath;
     }
 
-    protected Traveler(Parcel in) {
-        TITLE = in.readString();
-        VOTE_AVERAGE = in.readString();
-        RELEASE_DATE = in.readString();
-        OVERVIEW = in.readString();
-        posterpath = in.readString();
-        _id = in.readString();
+    public ArrayList<String> getStringArrayList() {
+        return stringArrayList;
     }
 
-    public static final Creator<Traveler> CREATOR = new Creator<Traveler>() {
-        @Override
-        public Traveler createFromParcel(Parcel in) {
-            return new Traveler(in);
-        }
-
-        @Override
-        public Traveler[] newArray(int size) {
-            return new Traveler[size];
-        }
-    };
+    public void setStringArrayList(ArrayList<String> stringArrayList) {
+        this.stringArrayList = stringArrayList;
+    }
 
     @Override
     public int describeContents() {
@@ -105,6 +116,7 @@ public class Traveler implements Parcelable {
         dest.writeString(RELEASE_DATE);
         dest.writeString(OVERVIEW);
         dest.writeString(posterpath);
+        dest.writeStringList(stringArrayList);
         dest.writeString(_id);
     }
 }
