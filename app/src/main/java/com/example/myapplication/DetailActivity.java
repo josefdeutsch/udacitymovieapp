@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -14,20 +15,35 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.DialogTitle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.data.Note;
+import com.example.myapplication.data.NoteAdapter;
+import com.example.myapplication.data.NoteViewModel;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class DetailActivity extends AppCompatActivity implements CardViewAdapter.CardViewAdapterOnClickHandler{
     private static final String astring= "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
     private static final String TAG = "DetailActivity";
+    private CardViewAdapter cardViewAdapter;
+    private RecyclerView mRecyclerView;
     private TextView title,releaseDate,average,overview;
     private ImageView imageView;
     private ActionBar actionBar;
@@ -46,7 +62,17 @@ public class DetailActivity extends AppCompatActivity {
         setupActionwithRed();
         init_Views();
         setup_Views(getTraveler());
+        setup_Recyler();
 
+    }
+
+    private void setup_Recyler(){
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        CardViewAdapter mCardViewAdapter = new CardViewAdapter(this,new ArrayList(10));
+        mRecyclerView.setAdapter(mCardViewAdapter);
     }
 
     private void setup_Views(Traveler traveler) {
@@ -66,17 +92,15 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void init_Views() {
+        mRecyclerView = findViewById(R.id.recyclerview);
         title = findViewById(R.id.title);
         releaseDate = findViewById(R.id.releasedate);
         average = findViewById(R.id.average);
         imageView = findViewById(R.id.image);
         overview = findViewById(R.id.overview);
-     //   markAsFavorite = findViewById(R.id.mark);
-
     }
 
     public void deliver(View view){
-
         sendMessageToActivity(astring);
     }
 
@@ -162,7 +186,6 @@ public class DetailActivity extends AppCompatActivity {
 
     private void sendMessageToActivity(String obj) {
         Intent intent = new Intent(Constants.METADATA);
-        // You can also include some extra data.
         intent.putExtra(Constants.MOVIEID, MOVIEID);
         intent.putExtra(Constants.PATH, PATH);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
@@ -170,6 +193,11 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+
+    }
+
+    @Override
+    public void onClick(String str) {
 
     }
 }

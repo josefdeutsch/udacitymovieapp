@@ -273,7 +273,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
                 in.close();
 
             }catch (IOException e){
-
             }
             return metaData;
         }

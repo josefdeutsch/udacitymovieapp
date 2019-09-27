@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 
 public class JsonUtils {
+
     private static final String TAG = "JsonUtils";
     private final static String RESULTS = "results";
     private final static String TITLE = "original_title";

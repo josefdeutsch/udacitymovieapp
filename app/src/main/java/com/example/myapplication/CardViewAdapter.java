@@ -17,20 +17,20 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewAdapterViewHolder>{
+public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewAdapterViewHolder> {
     private static final String TAG = "CardViewAdapter";
     private static final String LOG_TAG = CardViewAdapter.class.getSimpleName();
     private final CardViewAdapterOnClickHandler mClickHandler;
     private ArrayList arrayList;
-    private List<Note> notes = new ArrayList<>();
 
     public interface CardViewAdapterOnClickHandler {
         void onClick(String weatherForDay);
     }
 
-    public CardViewAdapter(CardViewAdapterOnClickHandler clickHandler, MetaData metaData) {
+    public CardViewAdapter(CardViewAdapterOnClickHandler clickHandler, ArrayList arrayList) {
         mClickHandler = clickHandler;
-        init_Arraylist(metaData);
+        //init_Arraylist(metaData);
+        this.arrayList=arrayList;
     }
 
     private void init_Arraylist(MetaData metaData) {
@@ -43,6 +43,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     class CardViewAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView imageButton;
+
         public CardViewAdapterViewHolder(View view) {
             super(view);
             imageButton = view.findViewById(R.id.imageButton1);
@@ -67,21 +68,12 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     @Override
     public void onBindViewHolder(@NonNull CardViewAdapterViewHolder cardViewAdapterViewHolder, int i) {
-
-          // Note currentNote = notes.get(i);
-          Picasso.get().load(arrayList.get(i).toString()).into(cardViewAdapterViewHolder.imageButton);
-          System.out.println(i);
+          Picasso.get().load(R.drawable.playbutton).into(cardViewAdapterViewHolder.imageButton);
     }
 
     @Override
     public int getItemCount() {
-        // maximum results to be found at one page; json raw at moviedb.org.
-        return arrayList.size();
+        return 5;
 
-    }
-    public void setNotes(List<Note> notes) {
-        Log.d(TAG, "setNotes: ");
-        this.notes = notes;
-        notifyDataSetChanged();
     }
 }
