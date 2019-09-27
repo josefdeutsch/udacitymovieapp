@@ -1,14 +1,17 @@
 package com.example.myapplication.data;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
 public class NoteViewModel extends AndroidViewModel {
+    private static final String TAG = "NoteViewModel";
     private NoteRepository repository;
     private LiveData<List<Note>> allNotes;
 

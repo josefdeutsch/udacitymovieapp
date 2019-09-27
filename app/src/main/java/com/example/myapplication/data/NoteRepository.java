@@ -2,12 +2,15 @@ package com.example.myapplication.data;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
 public class NoteRepository {
+    private static final String TAG = "NoteRepository";
     private NoteDao noteDao;
     private LiveData<List<Note>> allNotes;
 
@@ -15,6 +18,7 @@ public class NoteRepository {
         NoteDatabase database = NoteDatabase.getInstance(application);
         noteDao = database.noteDao();
         allNotes = noteDao.getAllNotes();
+
     }
 
     public void insert(Note note) {

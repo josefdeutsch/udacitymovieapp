@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 
 
 public class JsonUtils {
-
+    private static final String TAG = "JsonUtils";
     private final static String RESULTS = "results";
     private final static String TITLE = "original_title";
     private final static String POSTER_PATH = "poster_path";
@@ -60,5 +62,44 @@ public class JsonUtils {
         posterpatharraylist.add(sb.toString());
         sb.setLength(0);
         return posterpatharraylist;
+    }
+    private String supplySingle(JSONObject jsonObject,StringBuilder sb){
+        sb.append(http);
+        String str = jsonObject.optString("poster_path");
+        sb.append(str);
+        return sb.toString();
+    }
+    public MetaDataSingle parseJSONSINGLE(String json) {
+
+        String RESULTS = null;
+        String TITLE = null;
+        String POSTER_PATH = null;
+        String VOTE_AVERAGE = null;
+        String RELEASE_DATE = null;
+        String OVERVIEW = null;
+        String ID = null;
+
+        StringBuilder sb = new StringBuilder();
+        Log.d(TAG, "parseJSONSINGLE: "+json);
+        JSONObject jsonObject = null;
+
+        try {
+                jsonObject = new JSONObject(json);
+
+                POSTER_PATH = supplySingle(jsonObject,sb);
+                TITLE = jsonObject.optString(this.TITLE);
+                VOTE_AVERAGE = jsonObject.optString(this.VOTE_AVERAGE);
+                RELEASE_DATE = jsonObject.optString(this.RELEASE_DATE);
+                OVERVIEW = jsonObject.optString(this.OVERVIEW);
+                ID = jsonObject.optString(this.ID);
+                Log.d(TAG, "onReceive: "+TITLE);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        // String TITLE, String POSTER_PATH, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String ID
+        return new MetaDataSingle(TITLE,POSTER_PATH,VOTE_AVERAGE,RELEASE_DATE,OVERVIEW,ID);
     }
 }

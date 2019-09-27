@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.DialogTitle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -31,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView imageView;
     private ActionBar actionBar;
     private Button markAsFavorite;
-    private String MOVIEID,TITLE;
+    private String MOVIEID,TITLE,PATH;
     private Button button;
 
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
@@ -60,7 +61,7 @@ public class DetailActivity extends AppCompatActivity {
                 .into(imageView);
         MOVIEID = getTraveler().get_id();
         TITLE = getTraveler().getTITLE();
-
+        PATH = getTraveler().getPosterpath();
 
     }
 
@@ -75,6 +76,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void deliver(View view){
+
         sendMessageToActivity(astring);
     }
 
@@ -159,10 +161,16 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void sendMessageToActivity(String obj) {
-        Intent intent = new Intent("MetaData");
+        Intent intent = new Intent(Constants.METADATA);
         // You can also include some extra data.
-        intent.putExtra("MetaData", obj);
+        intent.putExtra(Constants.MOVIEID, MOVIEID);
+        intent.putExtra(Constants.PATH, PATH);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+
     }
 }
 
