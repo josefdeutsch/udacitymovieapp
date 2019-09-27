@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -272,40 +271,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         }
         return super.onOptionsItemSelected(item);
     }
-    class Download extends AsyncTask<Void, Void, MetaData> {
-            String str;
-        public Download(String str){
-             this.str=str;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected MetaData doInBackground(Void... voids) {
-            MetaData metaData = null;
-            try{
-                URL oracle = new URL(str);
-                URLConnection yc = oracle.openConnection();
-                BufferedReader in = new BufferedReader(new InputStreamReader(
-                        yc.getInputStream()));
-                String inputLine;
-                while ((inputLine = in.readLine()) != null)
-                    metaData = jsonUtils.parseJSON(inputLine);
-                in.close();
-
-            }catch (IOException e){
-            }
-            return metaData;
-        }
-
-        @Override
-        protected void onPostExecute(MetaData status){
-            super.onPostExecute(status);
-        }
-    }
 
     private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
         @Override
@@ -338,6 +303,8 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
             Log.d(TAG, "onReceive: "+movieid);
         }
     };
+
+
     public View.OnClickListener navigateTo(final Class<?> clazz) {
         return new View.OnClickListener() {
             @Override
@@ -347,6 +314,10 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
             }
         };
     }
+
+
+
+
 
      class DownloadDetails extends AsyncTask<Void, Void, MetaDataPlaceHolder> {
         String str;
@@ -420,6 +391,41 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
 
             super.onPostExecute(status);
 
+        }
+    }
+
+     class Download extends AsyncTask<Void, Void, MetaData> {
+        String str;
+        public Download(String str){
+            this.str=str;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected MetaData doInBackground(Void... voids) {
+            MetaData metaData = null;
+            try{
+                URL oracle = new URL(str);
+                URLConnection yc = oracle.openConnection();
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        yc.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                    metaData = jsonUtils.parseJSON(inputLine);
+                in.close();
+
+            }catch (IOException e){
+            }
+            return metaData;
+        }
+
+        @Override
+        protected void onPostExecute(MetaData status){
+            super.onPostExecute(status);
         }
     }
 

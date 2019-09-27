@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity implements CardViewAdapter.CardViewAdapterOnClickHandler{
+
     private static final String astring= "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
     private static final String TAG = "DetailActivity";
     private CardViewAdapter cardViewAdapter;
@@ -37,9 +38,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
     private String MOVIEID,TITLE,PATH;
     private Button button;
     private ArrayList<String> KEYS;
-
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +90,6 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
     public void deliver(View view){
         sendMessageToActivity(astring);
     }
-
 
     private void setupActionwithRed() {
         actionBar=getSupportActionBar();
@@ -183,10 +181,13 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         super.onResume();
 
     }
-
     @Override
     public void onClick(String str) {
-
+        String str1 = KEYS.get(Integer.parseInt(str));
+        Intent intent = new Intent(this,YoutubePlayerActivity.class);
+        Log.d(TAG, "onClick: "+str1);
+        intent.putExtra("url",str1);
+        startActivity(intent);
     }
 }
 
