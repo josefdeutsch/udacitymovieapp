@@ -48,15 +48,6 @@ public abstract class NoteDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
 
-       /**   String url = "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
-          String url2 = "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
-          String url3 = "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
-
-          //noteDao.update(new Note("Title 1", "url", 1));
-
-            noteDao.insert(new Note("Title 1", url, 1));
-            noteDao.insert(new Note("Title 2", url2, 2));
-            noteDao.insert(new Note("Title 3", url3, 3));**/
 
             return null;
         }

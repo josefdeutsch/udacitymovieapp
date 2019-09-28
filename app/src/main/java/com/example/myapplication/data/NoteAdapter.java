@@ -49,8 +49,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
         View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
-        String str = Integer.toString(notes.size());
-        Log.d(TAG,str);
         return new NoteHolder(view);
     }
 
@@ -61,7 +59,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
             String movieid = currentNote.getTitle();
             sendMessageToActivity(movieid);
             Picasso.get().load(currentNote.getDescription()).into(noteHolder.imageButton);
-            Log.d(TAG,currentNote.getDescription());
         }else{
             Picasso.get().load(arrayList.get(i).toString()).into(noteHolder.imageButton);
         }

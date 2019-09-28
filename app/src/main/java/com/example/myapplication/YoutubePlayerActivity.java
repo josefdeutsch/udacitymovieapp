@@ -12,9 +12,11 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 public class YoutubePlayerActivity extends YouTubeBaseActivity {
+
     private static final String TAG = "YoutubePlayerActivity";
     YouTubePlayerView mYoutubePlayer;
     YouTubePlayer.OnInitializedListener mListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +24,7 @@ public class YoutubePlayerActivity extends YouTubeBaseActivity {
         Intent intent = getIntent();
         final String url = intent.getStringExtra("url");
         Log.d(TAG, "onCreate: "+url);
+
         mYoutubePlayer = findViewById(R.id.youtube_player_view);
         mListener = new YouTubePlayer.OnInitializedListener() {
             @Override

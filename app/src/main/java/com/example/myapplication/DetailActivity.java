@@ -31,11 +31,11 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
     private static final String TAG = "DetailActivity";
     private CardViewAdapter cardViewAdapter;
     private RecyclerView mRecyclerView;
-    private TextView title,releaseDate,average,overview;
+    private TextView title,releaseDate,average,overview,review;
     private ImageView imageView;
     private ActionBar actionBar;
     private Button markAsFavorite;
-    private String MOVIEID,TITLE,PATH;
+    private String MOVIEID,TITLE,PATH,REVIEW;
     private Button button;
     private ArrayList<String> KEYS;
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
@@ -43,6 +43,8 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        getSupportActionBar().setTitle("DetailActivity");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         button = findViewById(R.id.deliver);
         permission();
         setupActionwithRed();
@@ -50,7 +52,6 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         setup_Views(getTraveler());
         setup_Recyler();
         String string = Integer.toString(KEYS.size());
-        Log.d(TAG, "onCreate: "+string);
     }
 
     private void setup_Recyler(){
@@ -76,6 +77,8 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         TITLE = getTraveler().getTITLE();
         PATH = getTraveler().getPosterpath();
         KEYS = getTraveler().getStringArrayList();
+        review.setText(getTraveler().getREVIEW());
+
     }
 
     private void init_Views() {
@@ -85,6 +88,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         average = findViewById(R.id.average);
         imageView = findViewById(R.id.image);
         overview = findViewById(R.id.overview);
+        review = findViewById(R.id.review);
     }
 
     public void deliver(View view){

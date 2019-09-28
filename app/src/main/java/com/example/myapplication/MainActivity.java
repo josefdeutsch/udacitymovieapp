@@ -38,10 +38,12 @@ import java.util.concurrent.ExecutionException;
 import static com.example.myapplication.data.NoteDatabase.getInstance;
 
 public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteViewAdapaterOnClickHandler {
+
     private static final String TAG = "MainActivity";
+    private static final String MDBAPIKEY = "api_key=e70a89ec254767811eb928163ee008e4";
     private RecyclerView mRecyclerView;
     private NoteAdapter mCardViewAdapter, mCardViewAdapter2, mCardViewAdapter3;
-     // final ??
+    private NoteViewModel noteViewModel;
     private ArrayList<MetaData> popularlist;
     private ArrayList<MetaData> topratedlist;
     private ArrayList<MetaDataPlaceHolder> favoritelist;
@@ -49,16 +51,15 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
     private final String POPULAR = "https://api.themoviedb.org/3/movie/popular?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
     private final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
     private  final int FIRST_ITEM = 0;
-    private NoteViewModel noteViewModel;
-    // set permission to Popular if true,
-    // set permission to TopRated if false
+
     private Boolean listViewDecider = true;
-    private static final String anotherString= "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
+
     private JsonUtils jsonUtils = new JsonUtils();
     private ActionBar actionBar;
     public Integer identifier = Constants.POPULAR; // starting screen default,
+
     private Traveler traveler;
-    private final String DETAIL = "https://api.themoviedb.org/3/movie/474350?api_key=e70a89ec254767811eb928163ee008e4&language=en-US";
+
 
 
     @Override
@@ -72,8 +73,10 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         setup_Views();
         NoteDatabase noteDatabase = getInstance(this);
 
-    }
 
+
+    }
+  //  api_key=e70a89ec254767811eb928163ee008e4
     @Override
     public void onResume(){
         super.onResume();
@@ -201,11 +204,9 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         String id = arrayList.get(FIRST_ITEM).get_id().get(Integer.parseInt(str));
         MetaDataKeyHolder metaDataKeyHolder = getKeys(id);
         ArrayList<String> keys = metaDataKeyHolder.getKeys();
-        String string = Integer.toString(keys.size());
-        Log.d(TAG, "loadedtraveler: "+string);
-        // Traveler muss mit id query holt ein Objekt das weitergegeben wird.
+        String rev = getReview(id);
 
-        return new Traveler(title,vote_average,release_date,overview,poster,id,keys);
+        return new Traveler(title,vote_average,release_date,overview,poster,id,keys,rev);
     }
     public Traveler loadedtravelers(ArrayList<MetaDataPlaceHolder> arrayList, String str){
         String title = arrayList.get(Integer.parseInt(str)).getTITLE();
@@ -216,16 +217,32 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         String id = arrayList.get(Integer.parseInt(str)).getID();
         MetaDataKeyHolder metaDataKeyHolder = getKeys(id);
         ArrayList<String> keys = metaDataKeyHolder.getKeys();
-        String string = Integer.toString(keys.size());
-        Log.d(TAG, "loadedtravelers: "+string);
-        return new Traveler(title,vote_average,release_date,overview,poster,id,keys);
+        String rev = getReview(id);
+        return new Traveler(title,vote_average,release_date,overview,poster,id,keys,rev);
 
     }
+
+    private String getReview(String id){
+
+        String segment = "https://api.themoviedb.org/3/movie/";
+        String segment2 = "/reviews?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
+        String url = segment+id+segment2;
+        DownloadReview downloadReview = new DownloadReview(url);
+        String string = null;
+        try {
+          string =  downloadReview.execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return string;
+    }
+
     private MetaDataKeyHolder getKeys(String id){
        String segment="https://api.themoviedb.org/3/movie/";
        String segment2 ="/videos?api_key=e70a89ec254767811eb928163ee008e4&language=en-US";
        String url = segment+id+segment2;
-       Log.d(TAG, "getKeys: "+url);
        DownloadKeys downloadKeys = new DownloadKeys(url);
        MetaDataKeyHolder metaDataKeyHolder = null;
         try {
@@ -276,7 +293,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         @Override
         public void onReceive(Context context, Intent intent) {
             String movieid  = intent.getStringExtra(Constants.MOVIEID);
-            Log.d(TAG, "onReceive: "+movieid);
             String path  = intent.getStringExtra(Constants.PATH);
             Note note = new Note(movieid, path, 0);
             noteViewModel.insert(note);
@@ -299,8 +315,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
                 e.printStackTrace();
             }
             favoritelist.add(metaDataSingle);
-            //favoritelist.add(movieid);
-            Log.d(TAG, "onReceive: "+movieid);
         }
     };
 
@@ -314,9 +328,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
             }
         };
     }
-
-
-
 
 
      class DownloadDetails extends AsyncTask<Void, Void, MetaDataPlaceHolder> {
@@ -425,6 +436,42 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
 
         @Override
         protected void onPostExecute(MetaData status){
+            super.onPostExecute(status);
+        }
+    }
+
+     class DownloadReview extends AsyncTask<Void, Void, String> {
+
+        String str;
+        public DownloadReview(String str){
+            this.str=str;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String string = null;
+            try{
+                URL oracle = new URL(str);
+                URLConnection yc = oracle.openConnection();
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        yc.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                    string = jsonUtils.parseJSONREVIEW(inputLine);
+                in.close();
+
+            }catch (IOException e){
+            }
+            return string;
+        }
+
+        @Override
+        protected void onPostExecute(String status){
             super.onPostExecute(status);
         }
     }

@@ -9,8 +9,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-
-
 public class JsonUtils {
 
     private static final String TAG = "JsonUtils";
@@ -22,6 +20,8 @@ public class JsonUtils {
     private final static String OVERVIEW = "overview";
     private final static String ID = "id";
     private final static String KEY = "key";
+    private static final String AUTHOR = "author";
+    private static final String CONTENT = "content";
     private final String http = "http://image.tmdb.org/t/p/w185";
 
     public MetaData parseJSON(String json) {
@@ -41,7 +41,6 @@ public class JsonUtils {
 
             for (int i = 0; i <= jsonArray.length()-1 ; i++) {
                 posterpatharraylist = supply(posterpatharraylist, sb, jsonArray, i);
-                System.out.println(posterpatharraylist.get(i));
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                 title.add(jsonObject1.optString(TITLE));
                 average.add(jsonObject1.optString(VOTE_AVERAGE));
@@ -82,7 +81,6 @@ public class JsonUtils {
         String ID = null;
 
         StringBuilder sb = new StringBuilder();
-        Log.d(TAG, "parseJSONSINGLE: "+json);
         JSONObject jsonObject = null;
 
         try {
@@ -94,7 +92,6 @@ public class JsonUtils {
                 RELEASE_DATE = jsonObject.optString(this.RELEASE_DATE);
                 OVERVIEW = jsonObject.optString(this.OVERVIEW);
                 ID = jsonObject.optString(this.ID);
-                Log.d(TAG, "onReceive: "+TITLE);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -108,8 +105,7 @@ public class JsonUtils {
         ArrayList<String> key = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();
-        Log.d(TAG, "parseJSONKEY: "+json);
-       JSONObject jsonObject = null;
+        JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(json);
             JSONArray jsonArray = jsonObject.getJSONArray("results");
@@ -117,7 +113,6 @@ public class JsonUtils {
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                 string = jsonObject1.optString("key");
                 key.add(string);
-               // Log.d(TAG, "parseJSONKEY IN ARRAYLOOP: "+string);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -125,4 +120,23 @@ public class JsonUtils {
         return new MetaDataKeyHolder(key);
      //   return new MetaDataKeyHolder(key);
     }
+    public String parseJSONREVIEW(String json) {
+        StringBuilder sb = new StringBuilder();
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(json);
+            JSONArray jsonArray = jsonObject.getJSONArray(RESULTS);
+
+            for (int i = 0; i <= jsonArray.length() - 1; i++) {
+                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                String author = jsonObject1.optString("author");
+                String content = jsonObject1.optString("content");
+                sb.append(author + '\n').append(content + '\n');
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
 }

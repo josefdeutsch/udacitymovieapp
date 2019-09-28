@@ -13,6 +13,7 @@ public class Traveler implements Parcelable {
     private String OVERVIEW;
     private String posterpath;
     private ArrayList<String> stringArrayList;
+    private String REVIEW;
 
     protected Traveler(Parcel in) {
         TITLE = in.readString();
@@ -22,6 +23,7 @@ public class Traveler implements Parcelable {
         posterpath = in.readString();
         stringArrayList = in.createStringArrayList();
         _id = in.readString();
+        REVIEW  = in.readString();
     }
 
     public static final Creator<Traveler> CREATOR = new Creator<Traveler>() {
@@ -46,7 +48,7 @@ public class Traveler implements Parcelable {
 
     private String _id;
 
-    public Traveler(String TITLE, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String posterpath,String ID,ArrayList<String> stringArrayList) {
+    public Traveler(String TITLE, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String posterpath,String ID,ArrayList<String> stringArrayList,String REVIEW) {
         this.TITLE = TITLE;
         this.VOTE_AVERAGE = VOTE_AVERAGE;
         this.RELEASE_DATE = RELEASE_DATE;
@@ -54,6 +56,7 @@ public class Traveler implements Parcelable {
         this.posterpath = posterpath;
         this._id = ID;
         this.stringArrayList=stringArrayList;
+        this.REVIEW=REVIEW;
     }
 
     public String getTITLE() {
@@ -104,6 +107,14 @@ public class Traveler implements Parcelable {
         this.stringArrayList = stringArrayList;
     }
 
+    public String getREVIEW() {
+        return REVIEW;
+    }
+
+    public void setREVIEW(String REVIEW) {
+        this.REVIEW = REVIEW;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -118,5 +129,6 @@ public class Traveler implements Parcelable {
         dest.writeString(posterpath);
         dest.writeStringList(stringArrayList);
         dest.writeString(_id);
+        dest.writeString(REVIEW);
     }
 }
