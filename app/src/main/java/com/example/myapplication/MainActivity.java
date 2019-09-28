@@ -91,12 +91,11 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         mCardViewAdapter2 = new NoteAdapter(this,this,topratedlist.get(FIRST_ITEM));
 
         noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
-   //     String string = Integer.toString(notes.size());
-    //    Log.d(TAG,string);
+
         noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(@Nullable List<Note> notes) {
-               // sendDatatoActivity(notes);
+
                 mCardViewAdapter3.setNotes(notes);
             }
          /**   public void sendDatatoActivity(List<Note> notes){
@@ -113,11 +112,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
                 msgReceiver, new IntentFilter(Constants.METADATA));
         LocalBroadcastManager.getInstance(this).registerReceiver(
                threadReceiver, new IntentFilter(Constants.QUERYMOVIEID));
-
-     //    Note note = new Note("atitle", anotherString, 2);
-
-      //   noteViewModel.deleteAllNotes();
-        // mRecyclerView.setAdapter(adapter);
          mRecyclerView.setAdapter(mCardViewAdapter);
 
     }
