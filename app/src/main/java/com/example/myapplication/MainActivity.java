@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.data.Note;
 import com.example.myapplication.data.NoteAdapter;
-import com.example.myapplication.data.NoteDatabase;
 import com.example.myapplication.data.NoteViewModel;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,12 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static com.example.myapplication.data.NoteDatabase.getInstance;
 
 public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteViewAdapaterOnClickHandler {
 
     private static final String TAG = "MainActivity";
-    private static final String MDBAPIKEY = "api_key=e70a89ec254767811eb928163ee008e4";
+    private static final String MDBAPIKEY =
     private RecyclerView mRecyclerView;
     private NoteAdapter mCardViewAdapter, mCardViewAdapter2, mCardViewAdapter3;
     private NoteViewModel noteViewModel;
@@ -48,9 +46,9 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
     private ArrayList<MetaData> topratedlist;
     private ArrayList<MetaDataPlaceHolder> favoritelist;
 
-    private final String POPULAR = "https://api.themoviedb.org/3/movie/popular?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
-    private final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
-    private  final int FIRST_ITEM = 0;
+    private final String POPULAR = "https://api.themoviedb.org/3/movie/popular?"+MDBAPIKEY+"&language=en-US&page=1";
+    private final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?"+MDBAPIKEY+"&language=en-US&page=1";
+    private final int FIRST_ITEM = 0;
 
     private Boolean listViewDecider = true;
 
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         OnSaveInstanceState(savedInstanceState);
         init_Views();
         setup_Views();
-        NoteDatabase noteDatabase = getInstance(this);
+
 
 
 
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
 
      //    Note note = new Note("atitle", anotherString, 2);
 
-        //noteViewModel.deleteAllNotes();
+      //   noteViewModel.deleteAllNotes();
         // mRecyclerView.setAdapter(adapter);
          mRecyclerView.setAdapter(mCardViewAdapter);
 
@@ -225,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
     private String getReview(String id){
 
         String segment = "https://api.themoviedb.org/3/movie/";
-        String segment2 = "/reviews?api_key=e70a89ec254767811eb928163ee008e4&language=en-US&page=1";
+        String segment2 = "/reviews?"+MDBAPIKEY+"&language=en-US&page=1";
         String url = segment+id+segment2;
         DownloadReview downloadReview = new DownloadReview(url);
         String string = null;
@@ -241,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
 
     private MetaDataKeyHolder getKeys(String id){
        String segment="https://api.themoviedb.org/3/movie/";
-       String segment2 ="/videos?api_key=e70a89ec254767811eb928163ee008e4&language=en-US";
+       String segment2 ="/videos?"+MDBAPIKEY+"&language=en-US";
        String url = segment+id+segment2;
        DownloadKeys downloadKeys = new DownloadKeys(url);
        MetaDataKeyHolder metaDataKeyHolder = null;
@@ -303,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         public void onReceive(Context context, Intent intent) {
             String movieid  = intent.getStringExtra(Constants.MOVIEID);
             String segment ="https://api.themoviedb.org/3/movie/";
-            String segment2 ="?api_key=e70a89ec254767811eb928163ee008e4&language=en-US";
+            String segment2 ="?"+MDBAPIKEY+"&language=en-US";
             String url = segment.concat(movieid).concat(segment2);
             DownloadDetails downloadDetails = new DownloadDetails(url);
             MetaDataPlaceHolder metaDataSingle = null;
