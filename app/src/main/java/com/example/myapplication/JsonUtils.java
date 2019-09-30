@@ -33,7 +33,6 @@ public class JsonUtils {
         ArrayList<String> posterpatharraylist = new ArrayList<>();
         ArrayList<String> _ids = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-        System.out.println("in json :"+json);
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(json);
@@ -96,7 +95,6 @@ public class JsonUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // String TITLE, String POSTER_PATH, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String ID
         return new MetaDataPlaceHolder(TITLE,POSTER_PATH,VOTE_AVERAGE,RELEASE_DATE,OVERVIEW,ID);
     }
     public MetaDataKeyHolder parseJSONKEY(String json) {
@@ -118,7 +116,6 @@ public class JsonUtils {
             e.printStackTrace();
         }
         return new MetaDataKeyHolder(key);
-     //   return new MetaDataKeyHolder(key);
     }
     public String parseJSONREVIEW(String json) {
         StringBuilder sb = new StringBuilder();

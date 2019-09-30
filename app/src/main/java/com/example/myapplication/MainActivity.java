@@ -38,7 +38,7 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteViewAdapaterOnClickHandler {
 
     private static final String TAG = "MainActivity";
-    private static final String MDBAPIKEY =
+    private static final String MDBAPIKEY ="api_key=e70a89ec254767811eb928163ee008e4";
     private RecyclerView mRecyclerView;
     private NoteAdapter mCardViewAdapter, mCardViewAdapter2, mCardViewAdapter3;
     private NoteViewModel noteViewModel;
@@ -69,10 +69,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         OnSaveInstanceState(savedInstanceState);
         init_Views();
         setup_Views();
-
-
-
-
     }
   //  api_key=e70a89ec254767811eb928163ee008e4
     @Override
