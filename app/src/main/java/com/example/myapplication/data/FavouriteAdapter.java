@@ -3,7 +3,7 @@ package com.example.myapplication.data;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,23 +20,24 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
-    private List<Note> notes = new ArrayList<>();
+public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.NoteHolder> {
+    private List<Favourite> notes = new ArrayList<>();
     private ArrayList arrayList;
-    private static final String TAG = "NoteAdapter";
+    private static final String TAG = "FavouriteAdapter";
     private Context context;
-    private ArrayList<Note> arrayNoteList;
+    private ArrayList<Favourite> arrayNoteList;
 
     private NoteViewAdapaterOnClickHandler mClickHandler;
+
     public interface NoteViewAdapaterOnClickHandler {
         void onClick(String string);
     }
-    public NoteAdapter(Context context,NoteViewAdapaterOnClickHandler mClickHandler){
+    public FavouriteAdapter(Context context, NoteViewAdapaterOnClickHandler mClickHandler){
         this.mClickHandler=mClickHandler;
 
     }
 
-    public NoteAdapter(Context context,NoteViewAdapaterOnClickHandler mClickHandler, MetaData metaData){
+    public FavouriteAdapter(Context context, NoteViewAdapaterOnClickHandler mClickHandler, MetaData metaData){
         this.arrayList = metaData.getPosterPath();
         this.mClickHandler=mClickHandler;
     }
@@ -55,7 +56,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
     @Override
     public void onBindViewHolder(@NonNull NoteHolder noteHolder, int i) {
         if(arrayList==null){
-            Note currentNote = notes.get(i);
+            Favourite currentNote = notes.get(i);
             String movieid = currentNote.getTitle();
             sendMessageToActivity(movieid);
             Picasso.get().load(currentNote.getDescription()).into(noteHolder.imageButton);
@@ -70,7 +71,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
         return 20;
     }
 
-    public void setNotes(List<Note> notes) {
+    public void setNotes(List<Favourite> notes) {
         this.notes = notes;
         notifyDataSetChanged();
     }

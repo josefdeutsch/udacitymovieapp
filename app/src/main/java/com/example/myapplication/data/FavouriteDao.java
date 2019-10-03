@@ -2,7 +2,6 @@ package com.example.myapplication.data;
 
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -12,20 +11,20 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface NoteDao {
+public interface FavouriteDao {
 
     @Insert
-    void insert(Note note);
+    void insert(Favourite note);
 
     @Update
-    void update(Note note);
+    void update(Favourite note);
 
     @Delete
-    void delete(Note note);
+    void delete(Favourite note);
 
-    @Query("DELETE FROM note_table")
+    @Query("DELETE FROM favourite_table")
     void deleteAllNotes();
 
-    @Query("SELECT * FROM note_table") //ORDER BY priority DESC
-    LiveData<List<Note>> getAllNotes();
+    @Query("SELECT * FROM favourite_table") //ORDER BY priority DESC
+    LiveData<List<Favourite>> getAllNotes();
 }

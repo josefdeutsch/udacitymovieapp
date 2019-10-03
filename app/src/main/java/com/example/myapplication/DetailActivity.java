@@ -35,7 +35,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
     private ImageView imageView;
     private ActionBar actionBar;
     private Button markAsFavorite;
-    private String MOVIEID,TITLE,PATH,REVIEW;
+    private String MOVIEID,TITLE,PATH,REVIEW,ISAFAVORITE;
     private Button button;
     private ArrayList<String> KEYS;
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
@@ -52,6 +52,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         setup_Views(getTraveler());
         setup_Recyler();
         String string = Integer.toString(KEYS.size());
+        Log.d(TAG, "onCreate: "+"how many times in onCreate--?");
     }
 
     private void setup_Recyler(){
@@ -78,6 +79,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         PATH = getTraveler().getPosterpath();
         KEYS = getTraveler().getStringArrayList();
         review.setText(getTraveler().getREVIEW());
+        ISAFAVORITE = getTraveler().getIsaFAVORITE();
 
     }
 
@@ -92,7 +94,12 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
     }
 
     public void deliver(View view){
-        sendMessageToActivity(astring);
+        Boolean aboolean = Boolean.parseBoolean(ISAFAVORITE);
+        if(!aboolean){
+
+            sendMessageToActivity(astring);
+        }
+
     }
 
     private void setupActionwithRed() {
@@ -170,7 +177,10 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         Intent intent = new Intent(Constants.METADATA);
         intent.putExtra(Constants.MOVIEID, MOVIEID);
         intent.putExtra(Constants.PATH, PATH);
+        // set true
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        Log.d(TAG, "sendMessageToActivity:  "+"howmanytimes");
+        // is false
     }
     @Override
     public void onResume(){

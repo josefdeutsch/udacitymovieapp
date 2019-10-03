@@ -22,9 +22,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.myapplication.data.Note;
-import com.example.myapplication.data.NoteAdapter;
-import com.example.myapplication.data.NoteViewModel;
+
+import com.example.myapplication.data.Favourite;
+import com.example.myapplication.data.FavouriteAdapter;
+import com.example.myapplication.data.FavouriteViewModel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,29 +36,29 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteViewAdapaterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements FavouriteAdapter.NoteViewAdapaterOnClickHandler {
 
     private static final String TAG = "MainActivity";
-    private static final String MDBAPIKEY =
+    private static final String MDBAPIKEY = "api_key=e70a89ec254767811eb928163ee008e4";
     private RecyclerView mRecyclerView;
-    private NoteAdapter mCardViewAdapter, mCardViewAdapter2, mCardViewAdapter3;
-    private NoteViewModel noteViewModel;
+    private FavouriteAdapter mCardViewAdapter, mCardViewAdapter2, mCardViewAdapter3;
+    private FavouriteViewModel noteViewModel;
     private ArrayList<MetaData> popularlist;
     private ArrayList<MetaData> topratedlist;
     private ArrayList<MetaDataPlaceHolder> favoritelist;
+    private ArrayList<String> idList;
+    private ArrayList<String> pathList;
 
     private final String POPULAR = "https://api.themoviedb.org/3/movie/popular?"+MDBAPIKEY+"&language=en-US&page=1";
     private final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?"+MDBAPIKEY+"&language=en-US&page=1";
     private final int FIRST_ITEM = 0;
-
     private Boolean listViewDecider = true;
-
     private JsonUtils jsonUtils = new JsonUtils();
     private ActionBar actionBar;
     public Integer identifier = Constants.POPULAR; // starting screen default,
-
     private Traveler traveler;
-
+    private String isaduplicate = "default";
+    public String movieid;
 
 
     @Override
@@ -70,10 +71,16 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         init_Views();
         setup_Views();
     }
-  //  api_key=e70a89ec254767811eb928163ee008e4
     @Override
     public void onResume(){
         super.onResume();
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d(TAG, "onPause: ");
     }
 
     private void setup_Views() {
@@ -82,21 +89,22 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mCardViewAdapter3 = new NoteAdapter(this,this);
-        mCardViewAdapter = new NoteAdapter(this,this,popularlist.get(FIRST_ITEM)); // weil ClickHandler anders...
-        mCardViewAdapter2 = new NoteAdapter(this,this,topratedlist.get(FIRST_ITEM));
+        mCardViewAdapter3 = new FavouriteAdapter(this,this);
+        mCardViewAdapter = new FavouriteAdapter(this,this,popularlist.get(FIRST_ITEM)); // weil ClickHandler anders...
+        mCardViewAdapter2 = new FavouriteAdapter(this,this,topratedlist.get(FIRST_ITEM));
 
-        noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
+        noteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
 
-        noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
+        noteViewModel.getAllNotes().observe(this, new Observer<List<Favourite>>() {
             @Override
-            public void onChanged(@Nullable List<Note> notes) {
+            public void onChanged(@Nullable List<Favourite> notes) {
 
                 mCardViewAdapter3.setNotes(notes);
+
             }
-         /**   public void sendDatatoActivity(List<Note> notes){
+         /**   public void sendDatatoActivity(List<Favourite> notes){
                 Intent intent = new Intent("ThreadsafeNotelist");
-                ArrayList<Note> notes1 = (ArrayList<Note>)notes;
+                ArrayList<Favourite> notes1 = (ArrayList<Favourite>)notes;
                 intent.putParcelableArrayListExtra("list", notes1);
                 //String string = notes.get(0).getDescription();
                 //intent.putExtra("list", string);
@@ -110,8 +118,9 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
                threadReceiver, new IntentFilter(Constants.QUERYMOVIEID));
          mRecyclerView.setAdapter(mCardViewAdapter);
 
-    }
+       // noteViewModel.deleteAllNotes();
 
+    }
 
     private void init_Views() {
         mRecyclerView = findViewById(R.id.recyclerview);
@@ -144,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         popularlist = new ArrayList<>();
         topratedlist = new ArrayList<>();
         favoritelist = new ArrayList<>();
+        idList = new ArrayList<>();
+        pathList = new ArrayList<>();
     }
 
     private MetaData getMetaData(String str) {
@@ -159,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
 
     @Override
     public void onClick(String str) {
+
+
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("pos",str);
         traveler = travels(str);
@@ -183,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         }
         return null;
     }
+
     public Traveler loadedtraveler(ArrayList<MetaData> arrayList, String str){
         String title = arrayList.get(FIRST_ITEM).getTITLE().get(Integer.parseInt(str)).toString();
         String vote_average = arrayList.get(FIRST_ITEM).getVOTE_AVERAGE().get(Integer.parseInt(str)).toString();
@@ -194,8 +208,9 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         ArrayList<String> keys = metaDataKeyHolder.getKeys();
         String rev = getReview(id);
 
-        return new Traveler(title,vote_average,release_date,overview,poster,id,keys,rev);
+        return new Traveler(title,vote_average,release_date,overview,poster,id,keys,rev,"false");
     }
+
     public Traveler loadedtravelers(ArrayList<MetaDataPlaceHolder> arrayList, String str){
         String title = arrayList.get(Integer.parseInt(str)).getTITLE();
         String vote_average = arrayList.get(Integer.parseInt(str)).getVOTE_AVERAGE();
@@ -206,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
         MetaDataKeyHolder metaDataKeyHolder = getKeys(id);
         ArrayList<String> keys = metaDataKeyHolder.getKeys();
         String rev = getReview(id);
-        return new Traveler(title,vote_average,release_date,overview,poster,id,keys,rev);
+        return new Traveler(title,vote_average,release_date,overview,poster,id,keys,rev,"true");
 
     }
 
@@ -278,21 +293,30 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
     }
 
     private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
+
+
+            Log.d(TAG, "onReceive: "+ "HOW MANY TIMES");
+
             String movieid  = intent.getStringExtra(Constants.MOVIEID);
+            Log.d(TAG, "onReceive: "+movieid);
             String path  = intent.getStringExtra(Constants.PATH);
-            Note note = new Note(movieid, path, 0);
+            Favourite note = new Favourite(movieid, path, 0);
             noteViewModel.insert(note);
         }
     };
+
     private BroadcastReceiver threadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String movieid  = intent.getStringExtra(Constants.MOVIEID);
+
+       /**     String movieid  = intent.getStringExtra(Constants.MOVIEID);
             String segment ="https://api.themoviedb.org/3/movie/";
             String segment2 ="?"+MDBAPIKEY+"&language=en-US";
             String url = segment.concat(movieid).concat(segment2);
+
             DownloadDetails downloadDetails = new DownloadDetails(url);
             MetaDataPlaceHolder metaDataSingle = null;
             try {
@@ -302,10 +326,19 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            favoritelist.add(metaDataSingle);
+            favoritelist.add(metaDataSingle);**/
         }
     };
-
+    public static boolean isListContainMethod(List<String> arraylist, String another) {
+        if(arraylist != null){
+          for (String str : arraylist) {
+            if (str.equals(another)) {
+                return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public View.OnClickListener navigateTo(final Class<?> clazz) {
         return new View.OnClickListener() {
@@ -316,7 +349,6 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.NoteV
             }
         };
     }
-
 
      class DownloadDetails extends AsyncTask<Void, Void, MetaDataPlaceHolder> {
         String str;

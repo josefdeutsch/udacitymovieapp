@@ -7,8 +7,8 @@ import android.os.Parcelable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "note_table")
-public class Note implements Parcelable {
+@Entity(tableName = "favourite_table")
+public class Favourite implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -19,28 +19,28 @@ public class Note implements Parcelable {
 
     private int priority;
 
-    public Note(String title, String description, int priority) {
+    public Favourite(String title, String description, int priority) {
         this.title = title;
         this.description = description;
         this.priority = priority;
     }
 
-    protected Note(Parcel in) {
+    protected Favourite(Parcel in) {
         id = in.readInt();
         title = in.readString();
         description = in.readString();
         priority = in.readInt();
     }
 
-    public static final Creator<Note> CREATOR = new Creator<Note>() {
+    public static final Creator<Favourite> CREATOR = new Creator<Favourite>() {
         @Override
-        public Note createFromParcel(Parcel in) {
-            return new Note(in);
+        public Favourite createFromParcel(Parcel in) {
+            return new Favourite(in);
         }
 
         @Override
-        public Note[] newArray(int size) {
-            return new Note[size];
+        public Favourite[] newArray(int size) {
+            return new Favourite[size];
         }
     };
 

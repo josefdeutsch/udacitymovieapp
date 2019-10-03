@@ -37,6 +37,6 @@ public class YoutubePlayerActivity extends YouTubeBaseActivity {
 
             }
         };
-        mYoutubePlayer.initialize(Constants.API_KEY,mListener);
+        mYoutubePlayer.initialize(Constants.YoutubeAPIKEY,mListener);
     }
 }

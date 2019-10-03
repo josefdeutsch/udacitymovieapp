@@ -3,7 +3,7 @@ package com.example.myapplication;
 public class Constants {
 
 
-    public static final String YoutubeAPIKEY =
+    public static final String YoutubeAPIKEY = "AIzaSyAaTG-xTYwNc1JP71z_-gvRy5NeBkz9Y5E";
     public static final int POPULAR = 0;
     public static final int TOP_RATED = 1;
     public static final int FAVORITE = 2;
