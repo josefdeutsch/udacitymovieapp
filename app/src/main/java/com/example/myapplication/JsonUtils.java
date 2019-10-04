@@ -36,7 +36,7 @@ public class JsonUtils {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
+            JSONArray jsonArray = jsonObject.getJSONArray(RESULTS);
 
             for (int i = 0; i <= jsonArray.length()-1 ; i++) {
                 posterpatharraylist = supply(posterpatharraylist, sb, jsonArray, i);
@@ -57,7 +57,7 @@ public class JsonUtils {
     private ArrayList<String> supply(ArrayList<String> posterpatharraylist, StringBuilder sb, JSONArray jsonArray, int i) throws JSONException {
         sb.append(http);
         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-        String str = jsonObject1.optString("poster_path");
+        String str = jsonObject1.optString(POSTER_PATH);
         sb.append(str);
         posterpatharraylist.add(sb.toString());
         sb.setLength(0);
@@ -65,7 +65,7 @@ public class JsonUtils {
     }
     private String supplySingle(JSONObject jsonObject,StringBuilder sb){
         sb.append(http);
-        String str = jsonObject.optString("poster_path");
+        String str = jsonObject.optString(POSTER_PATH);
         sb.append(str);
         return sb.toString();
     }
@@ -86,11 +86,11 @@ public class JsonUtils {
                 jsonObject = new JSONObject(json);
 
                 POSTER_PATH = supplySingle(jsonObject,sb);
-                TITLE = jsonObject.optString(this.TITLE);
-                VOTE_AVERAGE = jsonObject.optString(this.VOTE_AVERAGE);
-                RELEASE_DATE = jsonObject.optString(this.RELEASE_DATE);
-                OVERVIEW = jsonObject.optString(this.OVERVIEW);
-                ID = jsonObject.optString(this.ID);
+                TITLE = jsonObject.optString(JsonUtils.TITLE);
+                VOTE_AVERAGE = jsonObject.optString(JsonUtils.VOTE_AVERAGE);
+                RELEASE_DATE = jsonObject.optString(JsonUtils.RELEASE_DATE);
+                OVERVIEW = jsonObject.optString(JsonUtils.OVERVIEW);
+                ID = jsonObject.optString(JsonUtils.ID);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -106,10 +106,10 @@ public class JsonUtils {
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
+            JSONArray jsonArray = jsonObject.getJSONArray(RESULTS);
             for (int i = 0; i <= jsonArray.length()-1 ; i++) {
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                string = jsonObject1.optString("key");
+                string = jsonObject1.optString(KEY);
                 key.add(string);
             }
         } catch (JSONException e) {
@@ -126,8 +126,8 @@ public class JsonUtils {
 
             for (int i = 0; i <= jsonArray.length() - 1; i++) {
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                String author = jsonObject1.optString("author");
-                String content = jsonObject1.optString("content");
+                String author = jsonObject1.optString(AUTHOR);
+                String content = jsonObject1.optString(CONTENT);
                 sb.append(author + '\n').append(content + '\n');
             }
         } catch (JSONException e) {

@@ -19,8 +19,8 @@ public class Favourite implements Parcelable {
 
     private int priority;
 
-    public Favourite(String title, String description, int priority) {
-        this.title = title;
+    public Favourite(int id, String description, int priority) {
+        this.id = id;
         this.description = description;
         this.priority = priority;
     }
@@ -50,6 +50,10 @@ public class Favourite implements Parcelable {
 
     public int getId() {
         return id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getTitle() {

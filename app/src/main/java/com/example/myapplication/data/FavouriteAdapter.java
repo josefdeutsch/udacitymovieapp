@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.Constants;
+import com.example.myapplication.Config;
 import com.example.myapplication.MetaData;
 import com.example.myapplication.R;
 import com.squareup.picasso.Picasso;
@@ -25,8 +25,6 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Note
     private ArrayList arrayList;
     private static final String TAG = "FavouriteAdapter";
     private Context context;
-    private ArrayList<Favourite> arrayNoteList;
-
     private NoteViewAdapaterOnClickHandler mClickHandler;
 
     public interface NoteViewAdapaterOnClickHandler {
@@ -44,7 +42,6 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Note
     @NonNull
     @Override
     public NoteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        arrayNoteList=null;
         Context context = parent.getContext();
         int layoutIdForListItem = R.layout.note_item_picasso;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -57,7 +54,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Note
     public void onBindViewHolder(@NonNull NoteHolder noteHolder, int i) {
         if(arrayList==null){
             Favourite currentNote = notes.get(i);
-            String movieid = currentNote.getTitle();
+            String movieid = String.valueOf(currentNote.getId());
             sendMessageToActivity(movieid);
             Picasso.get().load(currentNote.getDescription()).into(noteHolder.imageButton);
         }else{
@@ -95,8 +92,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Note
         }
     }
     private void sendMessageToActivity(String movieid) {
-        Intent intent = new Intent(Constants.QUERYMOVIEID);
-        intent.putExtra(Constants.MOVIEID, movieid);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        Intent intent = new Intent(Config.QUERYMOVIEID);
+        intent.putExtra(Config.MOVIEID, movieid);
+        LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent);
     }
 }

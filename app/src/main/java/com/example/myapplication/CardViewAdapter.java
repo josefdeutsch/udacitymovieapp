@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewAdapterViewHolder> {
     private static final String TAG = "CardViewAdapter";
-    private static final String LOG_TAG = CardViewAdapter.class.getSimpleName();
     private final CardViewAdapterOnClickHandler mClickHandler;
     private ArrayList arrayList;
 
@@ -23,17 +21,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     public CardViewAdapter(CardViewAdapterOnClickHandler clickHandler, ArrayList arrayList) {
         mClickHandler = clickHandler;
-        //init_Arraylist(metaData);
         this.arrayList=arrayList;
     }
 
-    private void init_Arraylist(MetaData metaData) {
-        if (metaData != null) {
-            this.arrayList = metaData.getPosterPath();
-        } else {
-            Log.d(LOG_TAG, "a problem occurs;- network connection...");
-        }
-    }
 
     class CardViewAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView imageButton;
@@ -62,7 +52,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     @Override
     public void onBindViewHolder(@NonNull CardViewAdapterViewHolder cardViewAdapterViewHolder, int i) {
-          Picasso.get().load(R.drawable.playbutton).into(cardViewAdapterViewHolder.imageButton);
+        Picasso.get().load(R.drawable.playbutton).into(cardViewAdapterViewHolder.imageButton);
     }
 
     @Override

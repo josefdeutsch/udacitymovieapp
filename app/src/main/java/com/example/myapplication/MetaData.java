@@ -7,30 +7,21 @@ import java.util.ArrayList;
 
 public class MetaData implements Parcelable  {
 
-    private ArrayList TITLE;
-    private ArrayList VOTE_AVERAGE;
-    private ArrayList RELEASE_DATE;
-    private ArrayList OVERVIEW;
+    private ArrayList title;
+    private ArrayList voteAverage;
+    private ArrayList releaseDate;
+    private ArrayList overview;
     private ArrayList<String> posterpatharraylist;
+    private ArrayList<String> id;
 
-    public ArrayList<String> get_id() {
-        return _id;
-    }
-
-    public void set_id(ArrayList<String> _id) {
-        this._id = _id;
-    }
-
-    private ArrayList<String> _id;
-
-    public MetaData(ArrayList<String> posterpatharraylist,ArrayList<String> TITLE, ArrayList<String> VOTE_AVERAGE, ArrayList<String> RELEASE_DATE, ArrayList<String> OVERVIEW, ArrayList<String> _id) {
+    public MetaData(ArrayList<String> posterpatharraylist, ArrayList<String> title, ArrayList<String> voteAverage, ArrayList<String> releaseDate, ArrayList<String> overview, ArrayList<String> id) {
 
         this.posterpatharraylist=posterpatharraylist;
-        this.TITLE=TITLE;
-        this.VOTE_AVERAGE=VOTE_AVERAGE;
-        this.RELEASE_DATE=RELEASE_DATE;
-        this.OVERVIEW=OVERVIEW;
-        this._id = _id;
+        this.title = title;
+        this.voteAverage = voteAverage;
+        this.releaseDate = releaseDate;
+        this.overview = overview;
+        this.id = id;
     }
 
     protected MetaData(Parcel in) {
@@ -57,36 +48,36 @@ public class MetaData implements Parcelable  {
         return this.posterpatharraylist;
     }
 
-    public ArrayList getTITLE() {
-        return TITLE;
+    public ArrayList getTitle() {
+        return title;
     }
 
-    public void setTITLE(ArrayList TITLE) {
-        this.TITLE = TITLE;
+    public void setTitle(ArrayList title) {
+        this.title = title;
     }
 
-    public ArrayList getVOTE_AVERAGE() {
-        return VOTE_AVERAGE;
+    public ArrayList getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setVOTE_AVERAGE(ArrayList VOTE_AVERAGE) {
-        this.VOTE_AVERAGE = VOTE_AVERAGE;
+    public void setVoteAverage(ArrayList voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
-    public ArrayList getRELEASE_DATE() {
-        return RELEASE_DATE;
+    public ArrayList getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRELEASE_DATE(ArrayList RELEASE_DATE) {
-        this.RELEASE_DATE = RELEASE_DATE;
+    public void setReleaseDate(ArrayList releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public ArrayList getOVERVIEW() {
-        return OVERVIEW;
+    public ArrayList getOverview() {
+        return overview;
     }
 
-    public void setOVERVIEW(ArrayList OVERVIEW) {
-        this.OVERVIEW = OVERVIEW;
+    public void setOverview(ArrayList overview) {
+        this.overview = overview;
     }
 
     @Override
@@ -97,5 +88,9 @@ public class MetaData implements Parcelable  {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringList(posterpatharraylist);
+    }
+
+    public ArrayList<String> getId() {
+        return id;
     }
 }

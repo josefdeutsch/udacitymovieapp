@@ -1,6 +1,6 @@
 package com.example.myapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,6 +37,6 @@ public class YoutubePlayerActivity extends YouTubeBaseActivity {
 
             }
         };
-        mYoutubePlayer.initialize(Constants.YoutubeAPIKEY,mListener);
+        mYoutubePlayer.initialize(Config.YoutubeAPIKEY,mListener);
     }
 }

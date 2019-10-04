@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.data.Favourite;
 import com.example.myapplication.data.FavouriteAdapter;
 import com.example.myapplication.data.FavouriteViewModel;
+import com.example.myapplication.data.Singleton;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,18 +38,18 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
+import static com.example.myapplication.Config.MDBAPIKEY;
+
+
 public class MainActivity extends AppCompatActivity implements FavouriteAdapter.NoteViewAdapaterOnClickHandler {
 
     private static final String TAG = "MainActivity";
-    private static final String MDBAPIKEY = "api_key=e70a89ec254767811eb928163ee008e4";
     private RecyclerView mRecyclerView;
     private FavouriteAdapter mCardViewAdapter, mCardViewAdapter2, mCardViewAdapter3;
     private FavouriteViewModel noteViewModel;
     private ArrayList<MetaData> popularlist;
     private ArrayList<MetaData> topratedlist;
     private ArrayList<MetaDataPlaceHolder> favoritelist;
-    private ArrayList<String> idList;
-    private ArrayList<String> pathList;
 
     private final String POPULAR = "https://api.themoviedb.org/3/movie/popular?"+MDBAPIKEY+"&language=en-US&page=1";
     private final String TOPRATED = "https://api.themoviedb.org/3/movie/top_rated?"+MDBAPIKEY+"&language=en-US&page=1";
@@ -55,10 +57,8 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
     private Boolean listViewDecider = true;
     private JsonUtils jsonUtils = new JsonUtils();
     private ActionBar actionBar;
-    public Integer identifier = Constants.POPULAR; // starting screen default,
-    private Traveler traveler;
-    private String isaduplicate = "default";
-    public String movieid;
+    public Integer identifier = Config.POPULAR;
+    private Messenger messenger;
 
 
     @Override
@@ -75,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
     public void onResume(){
         super.onResume();
 
+        String movieid =  Singleton.getInstance().getMovieid();
+        String path =  Singleton.getInstance().getPath();
+        if(movieid!=null&&path!=null){
+            Favourite note = new Favourite(Integer.parseInt(movieid), path, 0);
+            noteViewModel.insert(note);
+        }
     }
 
     @Override
@@ -98,27 +104,16 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
         noteViewModel.getAllNotes().observe(this, new Observer<List<Favourite>>() {
             @Override
             public void onChanged(@Nullable List<Favourite> notes) {
-
                 mCardViewAdapter3.setNotes(notes);
-
             }
-         /**   public void sendDatatoActivity(List<Favourite> notes){
-                Intent intent = new Intent("ThreadsafeNotelist");
-                ArrayList<Favourite> notes1 = (ArrayList<Favourite>)notes;
-                intent.putParcelableArrayListExtra("list", notes1);
-                //String string = notes.get(0).getDescription();
-                //intent.putExtra("list", string);
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-            }**/
         });
-
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                msgReceiver, new IntentFilter(Constants.METADATA));
+                msgReceiver, new IntentFilter(Config.METADATA));
         LocalBroadcastManager.getInstance(this).registerReceiver(
-               threadReceiver, new IntentFilter(Constants.QUERYMOVIEID));
+                broadcastReceiver, new IntentFilter(Config.QUERYMOVIEID));
          mRecyclerView.setAdapter(mCardViewAdapter);
 
-       // noteViewModel.deleteAllNotes();
+         //noteViewModel.deleteAllNotes();
 
     }
 
@@ -153,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
         popularlist = new ArrayList<>();
         topratedlist = new ArrayList<>();
         favoritelist = new ArrayList<>();
-        idList = new ArrayList<>();
-        pathList = new ArrayList<>();
     }
 
     private MetaData getMetaData(String str) {
@@ -170,58 +163,56 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
 
     @Override
     public void onClick(String str) {
-
-
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("pos",str);
-        traveler = travels(str);
-        intent.putExtra("traveler",traveler);
+        messenger = messenger(str);
+        intent.putExtra("messenger", messenger);
         super.startActivity(intent);
     }
 
-    public Traveler travels(String str){
+    public Messenger messenger(String str){
 
         switch(identifier) {
-            case Constants.POPULAR:
+            case Config.POPULAR:
                 Log.d(TAG,"POPULAR");
-                return loadedtraveler(popularlist,str);
-            case Constants.TOP_RATED:
+                return loadmessenger(popularlist,str);
+            case Config.TOP_RATED:
                 Log.d(TAG,"TOP_RATED");
-                return loadedtraveler(topratedlist,str);
-            case Constants.FAVORITE:
+                return loadmessenger(topratedlist,str);
+            case Config.FAVORITE:
                 Log.d(TAG,"FAVORITE");
-                return loadedtravelers(favoritelist,str);
+                return loadmessengers(favoritelist,str);
             default:
                 // code block
         }
         return null;
     }
 
-    public Traveler loadedtraveler(ArrayList<MetaData> arrayList, String str){
-        String title = arrayList.get(FIRST_ITEM).getTITLE().get(Integer.parseInt(str)).toString();
-        String vote_average = arrayList.get(FIRST_ITEM).getVOTE_AVERAGE().get(Integer.parseInt(str)).toString();
-        String release_date = arrayList.get(FIRST_ITEM).getRELEASE_DATE().get(Integer.parseInt(str)).toString();
-        String overview = arrayList.get(FIRST_ITEM).getOVERVIEW().get(Integer.parseInt(str)).toString();
+    public Messenger loadmessenger(ArrayList<MetaData> arrayList, String str){
+        String title = arrayList.get(FIRST_ITEM).getTitle().get(Integer.parseInt(str)).toString();
+        String vote_average = arrayList.get(FIRST_ITEM).getVoteAverage().get(Integer.parseInt(str)).toString();
+        String release_date = arrayList.get(FIRST_ITEM).getReleaseDate().get(Integer.parseInt(str)).toString();
+        String overview = arrayList.get(FIRST_ITEM).getOverview().get(Integer.parseInt(str)).toString();
         String poster = arrayList.get(FIRST_ITEM).getPosterPath().get(Integer.parseInt(str));
-        String id = arrayList.get(FIRST_ITEM).get_id().get(Integer.parseInt(str));
+        String id = arrayList.get(FIRST_ITEM).getId().get(Integer.parseInt(str));
         MetaDataKeyHolder metaDataKeyHolder = getKeys(id);
         ArrayList<String> keys = metaDataKeyHolder.getKeys();
         String rev = getReview(id);
 
-        return new Traveler(title,vote_average,release_date,overview,poster,id,keys,rev,"false");
+        return new Messenger(title,vote_average,release_date,overview,poster,id,keys,rev,"false");
     }
 
-    public Traveler loadedtravelers(ArrayList<MetaDataPlaceHolder> arrayList, String str){
-        String title = arrayList.get(Integer.parseInt(str)).getTITLE();
-        String vote_average = arrayList.get(Integer.parseInt(str)).getVOTE_AVERAGE();
-        String release_date = arrayList.get(Integer.parseInt(str)).getRELEASE_DATE();
-        String overview = arrayList.get(Integer.parseInt(str)).getOVERVIEW();
-        String poster = arrayList.get(Integer.parseInt(str)).getPOSTER_PATH();
-        String id = arrayList.get(Integer.parseInt(str)).getID();
+    public Messenger loadmessengers(ArrayList<MetaDataPlaceHolder> arrayList, String str){
+        String title = arrayList.get(Integer.parseInt(str)).getTitle();
+        String vote_average = arrayList.get(Integer.parseInt(str)).getVoteAverage();
+        String release_date = arrayList.get(Integer.parseInt(str)).getReleaseDate();
+        String overview = arrayList.get(Integer.parseInt(str)).getOverview();
+        String poster = arrayList.get(Integer.parseInt(str)).getPosterPath();
+        String id = arrayList.get(Integer.parseInt(str)).getId();
         MetaDataKeyHolder metaDataKeyHolder = getKeys(id);
         ArrayList<String> keys = metaDataKeyHolder.getKeys();
         String rev = getReview(id);
-        return new Traveler(title,vote_average,release_date,overview,poster,id,keys,rev,"true");
+        return new Messenger(title,vote_average,release_date,overview,poster,id,keys,rev,"true");
 
     }
 
@@ -271,48 +262,46 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
 
-            identifier = Constants.POPULAR;
+            identifier = Config.POPULAR;
             listViewDecider = true;
             mRecyclerView.swapAdapter(mCardViewAdapter,true);
             return true;
         }
         if (id == R.id.action_refresh2) {
 
-            identifier = Constants.TOP_RATED;
+            identifier = Config.TOP_RATED;
             listViewDecider = false;
             mRecyclerView.swapAdapter(mCardViewAdapter2,true);
             return true;
         }
         if (id == R.id.action_refresh3) {
 
-            identifier = Constants.FAVORITE;
+            identifier = Config.FAVORITE;
             mRecyclerView.swapAdapter(mCardViewAdapter3,true);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
+    public BroadcastReceiver msgReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
 
-
             Log.d(TAG, "onReceive: "+ "HOW MANY TIMES");
-
-            String movieid  = intent.getStringExtra(Constants.MOVIEID);
+            String movieid  = intent.getStringExtra(Config.MOVIEID);
             Log.d(TAG, "onReceive: "+movieid);
-            String path  = intent.getStringExtra(Constants.PATH);
-            Favourite note = new Favourite(movieid, path, 0);
+            String path  = intent.getStringExtra(Config.PATH);
+            Favourite note = new Favourite(Integer.parseInt(movieid), path, 0);
             noteViewModel.insert(note);
         }
     };
 
-    private BroadcastReceiver threadReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-       /**     String movieid  = intent.getStringExtra(Constants.MOVIEID);
+            String movieid  = intent.getStringExtra(Config.MOVIEID);
             String segment ="https://api.themoviedb.org/3/movie/";
             String segment2 ="?"+MDBAPIKEY+"&language=en-US";
             String url = segment.concat(movieid).concat(segment2);
@@ -326,29 +315,10 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            favoritelist.add(metaDataSingle);**/
+            favoritelist.add(metaDataSingle);
         }
     };
-    public static boolean isListContainMethod(List<String> arraylist, String another) {
-        if(arraylist != null){
-          for (String str : arraylist) {
-            if (str.equals(another)) {
-                return true;
-                }
-            }
-        }
-        return false;
-    }
 
-    public View.OnClickListener navigateTo(final Class<?> clazz) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, clazz);
-                startActivity(intent);
-            }
-        };
-    }
 
      class DownloadDetails extends AsyncTask<Void, Void, MetaDataPlaceHolder> {
         String str;

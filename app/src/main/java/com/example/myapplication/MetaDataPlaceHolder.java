@@ -6,108 +6,108 @@ import android.os.Parcelable;
 public class MetaDataPlaceHolder implements Parcelable {
 
 
-    private  String RESULTS;
-    private  String TITLE;
-    private  String POSTER_PATH;
-    private  String VOTE_AVERAGE;
-    private  String RELEASE_DATE;
-    private  String OVERVIEW;
-    private  String ID;
-    private  String KEY;
+    private  String results;
+    private  String title;
+    private  String posterPath;
+    private  String voteAverage;
+    private  String releaseDate;
+    private  String overview;
+    private  String id;
+    private  String key;
 
-    public String getKEY() {
-        return KEY;
+    public String getKey() {
+        return key;
     }
 
-    public void setKEY(String KEY) {
-        this.KEY = KEY;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public String getRESULTS() {
-        return RESULTS;
+    public String getResults() {
+        return results;
     }
 
-    public void setRESULTS(String RESULTS) {
-        this.RESULTS = RESULTS;
+    public void setResults(String results) {
+        this.results = results;
     }
 
-    public String getTITLE() {
-        return TITLE;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTITLE(String TITLE) {
-        this.TITLE = TITLE;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getPOSTER_PATH() {
-        return POSTER_PATH;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPOSTER_PATH(String POSTER_PATH) {
-        this.POSTER_PATH = POSTER_PATH;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
-    public String getVOTE_AVERAGE() {
-        return VOTE_AVERAGE;
+    public String getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setVOTE_AVERAGE(String VOTE_AVERAGE) {
-        this.VOTE_AVERAGE = VOTE_AVERAGE;
+    public void setVoteAverage(String voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
-    public String getRELEASE_DATE() {
-        return RELEASE_DATE;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRELEASE_DATE(String RELEASE_DATE) {
-        this.RELEASE_DATE = RELEASE_DATE;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public String getOVERVIEW() {
-        return OVERVIEW;
+    public String getOverview() {
+        return overview;
     }
 
-    public void setOVERVIEW(String OVERVIEW) {
-        this.OVERVIEW = OVERVIEW;
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public MetaDataPlaceHolder(){}
 
-    public MetaDataPlaceHolder(String TITLE, String POSTER_PATH, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String ID) {
-        this.TITLE = TITLE;
-        this.POSTER_PATH = POSTER_PATH;
-        this.VOTE_AVERAGE = VOTE_AVERAGE;
-        this.RELEASE_DATE = RELEASE_DATE;
-        this.OVERVIEW = OVERVIEW;
-        this.ID = ID;
+    public MetaDataPlaceHolder(String title, String posterPath, String voteAverage, String releaseDate, String overview, String id) {
+        this.title = title;
+        this.posterPath = posterPath;
+        this.voteAverage = voteAverage;
+        this.releaseDate = releaseDate;
+        this.overview = overview;
+        this.id = id;
     }
-    public MetaDataPlaceHolder(String TITLE, String POSTER_PATH, String VOTE_AVERAGE, String RELEASE_DATE, String OVERVIEW, String ID,String KEY) {
-        this.TITLE = TITLE;
-        this.POSTER_PATH = POSTER_PATH;
-        this.VOTE_AVERAGE = VOTE_AVERAGE;
-        this.RELEASE_DATE = RELEASE_DATE;
-        this.OVERVIEW = OVERVIEW;
-        this.ID = ID;
-        this.KEY = KEY;
+    public MetaDataPlaceHolder(String title, String posterPath, String voteAverage, String releaseDate, String overview, String id, String key) {
+        this.title = title;
+        this.posterPath = posterPath;
+        this.voteAverage = voteAverage;
+        this.releaseDate = releaseDate;
+        this.overview = overview;
+        this.id = id;
+        this.key = key;
     }
 
     protected MetaDataPlaceHolder(Parcel in) {
 
-        TITLE = in.readString();
-        POSTER_PATH = in.readString();
-        VOTE_AVERAGE = in.readString();
-        RELEASE_DATE = in.readString();
-        OVERVIEW = in.readString();
-        ID = in.readString();
-        KEY = in.readString();
+        title = in.readString();
+        posterPath = in.readString();
+        voteAverage = in.readString();
+        releaseDate = in.readString();
+        overview = in.readString();
+        id = in.readString();
+        key = in.readString();
     }
 
     public static final Creator<MetaDataPlaceHolder> CREATOR = new Creator<MetaDataPlaceHolder>() {
@@ -130,12 +130,12 @@ public class MetaDataPlaceHolder implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
-        dest.writeString(TITLE);
-        dest.writeString(POSTER_PATH);
-        dest.writeString(VOTE_AVERAGE);
-        dest.writeString(RELEASE_DATE);
-        dest.writeString(OVERVIEW);
-        dest.writeString(ID);
-        dest.writeString(KEY);
+        dest.writeString(title);
+        dest.writeString(posterPath);
+        dest.writeString(voteAverage);
+        dest.writeString(releaseDate);
+        dest.writeString(overview);
+        dest.writeString(id);
+        dest.writeString(key);
     }
 }
