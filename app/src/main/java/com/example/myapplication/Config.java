@@ -3,14 +3,11 @@ package com.example.myapplication;
 public class Config {
 
 
-    public static final String YoutubeAPIKEY =
-    public static final String MDBAPIKEY =
 
-   /////////////////////////////////////////////////////////////////////////////////////////////////
+   public static final String YoutubeAPIKEY = "";
+   public static final String MDBAPIKEY = "";
 
-
-
-
+   ///////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final int POPULAR = 0;
     public static final int TOP_RATED = 1;

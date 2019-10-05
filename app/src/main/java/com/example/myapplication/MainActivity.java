@@ -96,22 +96,22 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
         mRecyclerView.setHasFixedSize(true);
 
         mCardViewAdapter3 = new FavouriteAdapter(this,this);
-        mCardViewAdapter = new FavouriteAdapter(this,this,popularlist.get(FIRST_ITEM)); // weil ClickHandler anders...
+        mCardViewAdapter = new FavouriteAdapter(this,this,popularlist.get(FIRST_ITEM));
         mCardViewAdapter2 = new FavouriteAdapter(this,this,topratedlist.get(FIRST_ITEM));
 
         noteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
-
         noteViewModel.getAllNotes().observe(this, new Observer<List<Favourite>>() {
             @Override
             public void onChanged(@Nullable List<Favourite> notes) {
                 mCardViewAdapter3.setNotes(notes);
             }
         });
+
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 msgReceiver, new IntentFilter(Config.METADATA));
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 broadcastReceiver, new IntentFilter(Config.QUERYMOVIEID));
-         mRecyclerView.setAdapter(mCardViewAdapter);
+        mRecyclerView.setAdapter(mCardViewAdapter);
 
          //noteViewModel.deleteAllNotes();
 

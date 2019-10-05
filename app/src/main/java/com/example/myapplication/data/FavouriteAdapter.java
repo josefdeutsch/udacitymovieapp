@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +37,12 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Note
     }
 
     public FavouriteAdapter(Context context, NoteViewAdapaterOnClickHandler mClickHandler, MetaData metaData){
-        this.arrayList = metaData.getPosterPath();
+        if (metaData != null) {
+            this.arrayList = metaData.getPosterPath();
+        }else{
+            Toast.makeText(context, "please enter APIKEYS in Config.class",
+                    Toast.LENGTH_LONG).show();
+        }
         this.mClickHandler=mClickHandler;
     }
     @NonNull
