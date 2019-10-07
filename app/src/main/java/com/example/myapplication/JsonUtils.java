@@ -1,7 +1,7 @@
 package com.example.myapplication;
 
 
-import android.util.Log;
+import com.example.myapplication.body.MetaData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,14 +24,14 @@ public class JsonUtils {
     private static final String CONTENT = "content";
     private final String http = "http://image.tmdb.org/t/p/w185";
 
-    public MetaData parseJSON(String json) {
+    public MetaData parseJsonMultiple(String json) {
 
         ArrayList<String> title = new ArrayList<>();
         ArrayList<String> average = new ArrayList<>();
         ArrayList<String> releaseDate = new ArrayList<>();
         ArrayList<String> overview = new ArrayList<>();
         ArrayList<String> posterpatharraylist = new ArrayList<>();
-        ArrayList<String> _ids = new ArrayList<>();
+        ArrayList<String> ids = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         JSONObject jsonObject = null;
         try {
@@ -45,13 +45,13 @@ public class JsonUtils {
                 average.add(jsonObject1.optString(VOTE_AVERAGE));
                 releaseDate.add(jsonObject1.optString(RELEASE_DATE));
                 overview.add(jsonObject1.optString(OVERVIEW));
-                _ids.add(jsonObject1.optString(ID));
+                ids.add(jsonObject1.optString(ID));
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new MetaData(posterpatharraylist,title,average,releaseDate,overview,_ids);
+        return new MetaData(posterpatharraylist,title,average,releaseDate,overview,ids);
 
     }
     private ArrayList<String> supply(ArrayList<String> posterpatharraylist, StringBuilder sb, JSONArray jsonArray, int i) throws JSONException {
@@ -63,13 +63,7 @@ public class JsonUtils {
         sb.setLength(0);
         return posterpatharraylist;
     }
-    private String supplySingle(JSONObject jsonObject,StringBuilder sb){
-        sb.append(http);
-        String str = jsonObject.optString(POSTER_PATH);
-        sb.append(str);
-        return sb.toString();
-    }
-    public MetaDataPlaceHolder parseJSONSINGLE(String json) {
+    public MetaData parseJsonSingle(String json) {
 
         String RESULTS = null;
         String TITLE = null;
@@ -79,25 +73,44 @@ public class JsonUtils {
         String OVERVIEW = null;
         String ID = null;
 
+        ArrayList<String> title = new ArrayList<>();
+        ArrayList<String> average = new ArrayList<>();
+        ArrayList<String> releaseDate = new ArrayList<>();
+        ArrayList<String> overview = new ArrayList<>();
+        ArrayList<String> posterpatharraylist = new ArrayList<>();
+        ArrayList<String> ids = new ArrayList<>();
+
         StringBuilder sb = new StringBuilder();
         JSONObject jsonObject = null;
 
         try {
                 jsonObject = new JSONObject(json);
-
                 POSTER_PATH = supplySingle(jsonObject,sb);
+                posterpatharraylist.add(POSTER_PATH);
                 TITLE = jsonObject.optString(JsonUtils.TITLE);
+                title.add(TITLE);
                 VOTE_AVERAGE = jsonObject.optString(JsonUtils.VOTE_AVERAGE);
+                average.add(VOTE_AVERAGE);
                 RELEASE_DATE = jsonObject.optString(JsonUtils.RELEASE_DATE);
+                releaseDate.add(RELEASE_DATE);
                 OVERVIEW = jsonObject.optString(JsonUtils.OVERVIEW);
+                overview.add(OVERVIEW);
                 ID = jsonObject.optString(JsonUtils.ID);
+                ids.add(ID);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new MetaDataPlaceHolder(TITLE,POSTER_PATH,VOTE_AVERAGE,RELEASE_DATE,OVERVIEW,ID);
+        return new MetaData(posterpatharraylist,title,average,releaseDate,overview,ids);
     }
-    public MetaDataKeyHolder parseJSONKEY(String json) {
+    private String supplySingle(JSONObject jsonObject,StringBuilder sb){
+        sb.append(http);
+        String str = jsonObject.optString(POSTER_PATH);
+        sb.append(str);
+        return sb.toString();
+    }
+
+    public ArrayList<String> parseJSONKEY(String json) {
 
         String string = null;
         ArrayList<String> key = new ArrayList<>();
@@ -115,8 +128,9 @@ public class JsonUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new MetaDataKeyHolder(key);
+        return key;
     }
+
     public String parseJSONREVIEW(String json) {
         StringBuilder sb = new StringBuilder();
         JSONObject jsonObject = null;

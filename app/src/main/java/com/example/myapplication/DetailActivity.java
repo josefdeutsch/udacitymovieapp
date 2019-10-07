@@ -11,23 +11,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.myapplication.data.Singleton;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
-public class DetailActivity extends AppCompatActivity implements CardViewAdapter.CardViewAdapterOnClickHandler{
+public class DetailActivity extends AppCompatActivity implements DetailActivityPlayButtonAdapter.DetailActivityPlayButtonAdapterOnClickHandler{
 
-    private static final String astring= "https://cdn.pixabay.com/photo/2017/11/06/18/39/apple-2924531_960_720.jpg";
     private static final String TAG = "DetailActivity";
     private RecyclerView mRecyclerView;
     private TextView title,releaseDate,average,overview,review;
     private ImageView imageView;
     private ActionBar actionBar;
-    private String MOVIEID,TITLE,PATH,REVIEW,ISAFAVORITE;
+    private String movieid, path;
     private Button button;
     private ArrayList<String> KEYS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +37,7 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         button = findViewById(R.id.deliver);
         setupActionwithRed();
         init_Views();
-        setup_Views(getTraveler());
+        setup_Views(getMessage());
         setup_Recyler();
         Log.d(TAG, "onCreate: "+"how many times in onCreate--?");
     }
@@ -47,8 +47,8 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        CardViewAdapter mCardViewAdapter = new CardViewAdapter(this,new ArrayList(KEYS));
-        mRecyclerView.setAdapter(mCardViewAdapter);
+        DetailActivityPlayButtonAdapter mDetailActivityPlayButtonAdapter = new DetailActivityPlayButtonAdapter(this,new ArrayList(KEYS));
+        mRecyclerView.setAdapter(mDetailActivityPlayButtonAdapter);
     }
 
     private void setup_Views(Messenger traveler) {
@@ -56,18 +56,15 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         releaseDate.setText(traveler.getReleaseDate());
         overview.setText(traveler.getOverview());
         average.setText(traveler.getVoteAverage());
+        movieid = getMessage().getId();
+        path = getMessage().getPosterpath();
+        KEYS = getMessage().getStringArrayList();
+        review.setText(getMessage().getReview());
         Picasso.get()
                 .load(traveler.getPosterpath())
                 .resize(500, 500)
                 .centerCrop()
                 .into(imageView);
-        MOVIEID = getTraveler().getId();
-        TITLE = getTraveler().getTitle();
-        PATH = getTraveler().getPosterpath();
-        KEYS = getTraveler().getStringArrayList();
-        review.setText(getTraveler().getReview());
-        ISAFAVORITE = getTraveler().getIsaFAVORITE();
-
     }
 
     private void init_Views() {
@@ -81,12 +78,10 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
     }
 
     public void deliver(View view){
-        Boolean aboolean = Boolean.parseBoolean(ISAFAVORITE);
-        if(!aboolean){
-
-            sendMessageToActivity(astring);
-        }
-
+        Intent intent = new Intent(Config.METADATA);
+        intent.putExtra(Config.MOVIEID, movieid);
+        intent.putExtra(Config.PATH, path);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void setupActionwithRed() {
@@ -94,23 +89,11 @@ public class DetailActivity extends AppCompatActivity implements CardViewAdapter
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#b20000")));
     }
 
-    public Messenger getTraveler(){
+    public Messenger getMessage(){
         Intent intent = getIntent();
         return intent.getParcelableExtra("messenger");
     }
 
-    private void sendMessageToActivity(String obj) {
-        //  Intent intent = new Intent(Config.METADATA);
-        //  intent.putExtra(Config.MOVIEID, MOVIEID);
-        //  intent.putExtra(Config.PATH, PATH);
-        //  LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        Log.d(TAG, "sendMessageToActivity:  "+"howmanytimes");
-
-        Singleton singleton = Singleton.getInstance();
-        singleton.setMovieid(MOVIEID);
-        singleton.setPath(PATH);
-
-    }
     @Override
     public void onResume(){
         super.onResume();

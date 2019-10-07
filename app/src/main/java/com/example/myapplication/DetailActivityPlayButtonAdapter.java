@@ -10,16 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
-public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewAdapterViewHolder> {
-    private static final String TAG = "CardViewAdapter";
-    private final CardViewAdapterOnClickHandler mClickHandler;
+public class DetailActivityPlayButtonAdapter extends RecyclerView.Adapter<DetailActivityPlayButtonAdapter.CardViewAdapterViewHolder> {
+    private static final String TAG = "DetailActivityPlayButtonAdapter";
+    private final DetailActivityPlayButtonAdapterOnClickHandler mClickHandler;
     private ArrayList arrayList;
 
-    public interface CardViewAdapterOnClickHandler {
-        void onClick(String weatherForDay);
+    public interface DetailActivityPlayButtonAdapterOnClickHandler {
+        void onClick(String string);
     }
 
-    public CardViewAdapter(CardViewAdapterOnClickHandler clickHandler, ArrayList arrayList) {
+    public DetailActivityPlayButtonAdapter(DetailActivityPlayButtonAdapterOnClickHandler clickHandler, ArrayList arrayList) {
         mClickHandler = clickHandler;
         this.arrayList=arrayList;
     }

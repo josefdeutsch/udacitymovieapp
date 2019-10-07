@@ -21,7 +21,6 @@ public class FavouriteViewModel extends AndroidViewModel {
     }
 
     public void insert(Favourite note) {
-        Log.d(TAG, "insert: "+"HOW MANY TIMES");
         repository.insert(note);
     }
 

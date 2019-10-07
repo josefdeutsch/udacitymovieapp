@@ -14,7 +14,7 @@ public class Messenger implements Parcelable {
     private String posterpath;
     private ArrayList<String> stringArrayList;
     private String review;
-    private String isaFAVORITE;
+
     private String id;
 
     protected Messenger(Parcel in) {
@@ -26,7 +26,7 @@ public class Messenger implements Parcelable {
         stringArrayList = in.createStringArrayList();
         id = in.readString();
         review = in.readString();
-        isaFAVORITE = in.readString();
+
     }
 
     public static final Creator<Messenger> CREATOR = new Creator<Messenger>() {
@@ -49,7 +49,7 @@ public class Messenger implements Parcelable {
         this.id = id;
     }
 
-    public Messenger(String title, String voteAverage, String releaseDate, String overview, String posterpath, String ID, ArrayList<String> stringArrayList, String review, String isaFavorite) {
+    public Messenger(String title, String voteAverage, String releaseDate, String overview, String posterpath, String ID, ArrayList<String> stringArrayList, String review) {
         this.title = title;
         this.voteAverage = voteAverage;
         this.releaseDate = releaseDate;
@@ -58,7 +58,7 @@ public class Messenger implements Parcelable {
         this.id = ID;
         this.stringArrayList=stringArrayList;
         this.review = review;
-        this.isaFAVORITE = isaFavorite;
+
     }
 
     public String getTitle() {
@@ -117,13 +117,6 @@ public class Messenger implements Parcelable {
         this.review = review;
     }
 
-    public String getIsaFAVORITE() {
-        return isaFAVORITE;
-    }
-
-    public void setIsaFAVORITE(String isaFAVORITE) {
-        this.isaFAVORITE = isaFAVORITE;
-    }
 
     @Override
     public int describeContents() {
@@ -140,6 +133,5 @@ public class Messenger implements Parcelable {
         dest.writeStringList(stringArrayList);
         dest.writeString(id);
         dest.writeString(review);
-        dest.writeString(isaFAVORITE);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,52 +15,57 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Config;
-import com.example.myapplication.MetaData;
+import com.example.myapplication.body.MetaData;
 import com.example.myapplication.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.NoteHolder> {
+public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.FavoriteHolder> {
     private List<Favourite> notes = new ArrayList<>();
     private ArrayList arrayList;
     private static final String TAG = "FavouriteAdapter";
     private Context context;
-    private NoteViewAdapaterOnClickHandler mClickHandler;
+    private FavouriteViewAdapaterOnClickHandler mClickHandler;
 
-    public interface NoteViewAdapaterOnClickHandler {
+    public interface FavouriteViewAdapaterOnClickHandler {
         void onClick(String string);
     }
-    public FavouriteAdapter(Context context, NoteViewAdapaterOnClickHandler mClickHandler){
+
+    public FavouriteAdapter(Context context, FavouriteViewAdapaterOnClickHandler mClickHandler){
         this.mClickHandler=mClickHandler;
 
     }
 
-    public FavouriteAdapter(Context context, NoteViewAdapaterOnClickHandler mClickHandler, MetaData metaData){
+    /** I am aware of Generic Adapters, this is a workaround, the favorite is 1st in order @onCreate MainActivity **/
+    /** If the arraylist is null, there is no static jsonString, Notes will be queried of DataBase **/
+    /** getItemCount() **/
+
+    public FavouriteAdapter(Context context, FavouriteViewAdapaterOnClickHandler mClickHandler, MetaData metaData){
         if (metaData != null) {
             this.arrayList = metaData.getPosterPath();
         }else{
-            Toast.makeText(context, "please enter APIKEYS in Config.class",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "please enter APIKEYS in Config.class",Toast.LENGTH_LONG).show();
         }
         this.mClickHandler=mClickHandler;
     }
     @NonNull
     @Override
-    public NoteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavoriteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         int layoutIdForListItem = R.layout.note_item_picasso;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
         View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
-        return new NoteHolder(view);
+        return new FavoriteHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoteHolder noteHolder, int i) {
+    public void onBindViewHolder(@NonNull FavoriteHolder noteHolder, int i) {
         if(arrayList==null){
             Favourite currentNote = notes.get(i);
+            Log.d(TAG, "onReceive: "+"FavoriteAdapter");
             String movieid = String.valueOf(currentNote.getId());
             sendMessageToActivity(movieid);
             Picasso.get().load(currentNote.getDescription()).into(noteHolder.imageButton);
@@ -79,10 +85,10 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Note
         notifyDataSetChanged();
     }
 
-    class NoteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class FavoriteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final ImageView imageButton;
-        public NoteHolder(View itemView) {
+        public FavoriteHolder(View itemView) {
             super(itemView);
             imageButton = itemView.findViewById(R.id.imageButton1);
             itemView.setOnClickListener(this);
