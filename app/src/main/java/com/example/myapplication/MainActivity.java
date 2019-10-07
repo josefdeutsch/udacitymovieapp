@@ -137,11 +137,13 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+
         /** 3 different RecylcerViewAdapters of same Type to be swapped per menu item **/
 
         favorite = new FavouriteAdapter(this,this);
         popular = new FavouriteAdapter(this,this,popularlist.get(FIRST_ITEM));
         toprated = new FavouriteAdapter(this,this,topratedlist.get(FIRST_ITEM));
+
         /** Connect LiveData Observer with RecyclerViewAdapter **/
         /** the goal is to have access to in OnBindFunction, retrieve index per movieid via
          * FavouriteViewAdapaterOnClickHandler Interface **/
@@ -161,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 broadcastReceiver, new IntentFilter(Config.QUERYMOVIEID));
         mRecyclerView.setAdapter(favorite);
+
         //favouriteViewModel.deleteAllNotes();
     }
 
@@ -335,7 +338,6 @@ public class MainActivity extends AppCompatActivity implements FavouriteAdapter.
             });
             downloadDetails.setUrl(url);
             supply_favoriteList(downloadDetails);
-            Log.d(TAG, "onReceive: "+favoritelist.size());
         }
     };
     private ArrayList<String> getVideoKeyList(String id) {
