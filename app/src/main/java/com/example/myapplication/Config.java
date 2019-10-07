@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public class Config {
 
     public static final String YoutubeAPIKEY = "";
-   public static final String MDBAPIKEY = "";
+    public static final String MDBAPIKEY = "";
 
    ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,21 +27,21 @@ public class Config {
 
 
   public static String concatinatewithmovieid(String movieid) {
-  String segment ="https://api.themoviedb.org/3/movie/";
-  String segment2 ="?api_key="+MDBAPIKEY+"&language=en-US";
-  String url = segment.concat(movieid).concat(segment2);
-  return url;
+   String segment ="https://api.themoviedb.org/3/movie/";
+   String segment2 ="?api_key="+MDBAPIKEY+"&language=en-US";
+   String url = segment.concat(movieid).concat(segment2);
+   return url;
   }
 
   public static String concatenatewithKeys(String id) {
    String segment="https://api.themoviedb.org/3/movie/";
    String segment2 ="/videos?api_key="+MDBAPIKEY+"&language=en-US";
-  return segment + id + segment2;
+   return segment + id + segment2;
  }
 
  public static String concatinatewithReview(String id) {
-  String segment = "https://api.themoviedb.org/3/movie/";
-  String segment2 = "/reviews?api_key="+MDBAPIKEY+"&language=en-US&page=1";
-  return segment+id+segment2;
+   String segment = "https://api.themoviedb.org/3/movie/";
+   String segment2 = "/reviews?api_key="+MDBAPIKEY+"&language=en-US&page=1";
+   return segment+id+segment2;
  }
 }
