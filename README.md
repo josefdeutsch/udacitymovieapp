@@ -55,3 +55,11 @@ Here is the link to view a video demonstrating the app: https://youtu.be/1eFfdmH
 
 ## Get it on Google Play
 **Popular Movies** app gives you information about movies from the TMDb. See what movies are the most popular and high rated. You can also discover Now Playing or Upcoming movies. Popular Movies app will help you decide what to watch.👍
+
+## Join development!
+
+**Build status:** master ![](https://api.travis-ci.org/owncloud/android.svg?branch=master) stable ![](https://api.travis-ci.org/owncloud/android.svg?branch=stable)
+
+**Start contributing:** Make sure you read [SETUP.md](https://github.com/owncloud/android/blob/master/SETUP.md) when you start working on this project. Basically: Fork this repository and contribute back using pull requests to the master branch.
+
+**License:** [GPLv2](https://github.com/josefdeutsch/udacityappmaterial/blob/master/LICENSE.txt)
