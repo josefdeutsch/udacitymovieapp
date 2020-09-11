@@ -50,8 +50,7 @@ made by [Smashicons](https://www.flaticon.com/authors/smashicons) from [www.flat
 - [Retrofit](http://square.github.io/retrofit/) for REST api communication
 - [Picasso](http://square.github.io/picasso/) for image loading
 
-## Video
-Here is the link to view a video demonstrating the app: https://youtu.be/1eFfdmHGKMw
+
 
 ## Get it on Google Play
 **Popular Movies** app gives you information about movies from the TMDb. See what movies are the most popular and high rated. You can also discover Now Playing or Upcoming movies. Popular Movies app will help you decide what to watch.👍
