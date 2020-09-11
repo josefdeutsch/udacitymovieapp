@@ -28,17 +28,12 @@ By building this app, you will demonstrate your understanding of the
 foundational elements of programming for Android. Your app will communicate with 
 the Internet and provide a responsive and delightful user experience.
 
-## What I learned
+## What will I Learn? 
 - Fetch data from the Internet with theMovieDB API
 - Use adapters and custom list layouts to populate list views
 - Incorporate libraries to simplify the amount of code you need to write
 - Build a fully featured application that looks and feels natural on the latest Android operating system.
 
-
-## Image Resources
-[Icon](https://www.flaticon.com/free-icon/film_148716)
-made by [Smashicons](https://www.flaticon.com/authors/smashicons) from [www.flaticon.com](www.flaticon.com) is licensed by
-[CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 
 ## Libraries
 - [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/) 
